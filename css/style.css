@@ -184,7 +184,7 @@ footer{
 }
 
 
-aside#sidebar .quote input,{
+aside#sidebar .quote input{
     width:90%;
     padding:5px;
 }
