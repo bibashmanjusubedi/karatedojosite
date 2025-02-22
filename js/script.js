@@ -14,9 +14,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Apply clip-path and center only for Dojo3.jpg
         if (images[index].includes("Dojo3.jpg")) {
-            showcase.style.backgroundSize = "60% 100%";
+            showcase.childNodes[1].childNodes[1].style.marginTop = "50px";
+
+            // showcase.style.backgroundSize = "cover";
             showcase.style.backgroundPosition = "center"; // Align the top part
+            showcase.style.width= "500px";
+            showcase.style.height="400px";
+            showcase.style.objectFit="cover"
         } else {
+            showcase.childNodes[1].childNodes[1].style.marginTop = "100px";
+
+            showcase.style.width= "unset";
+            showcase.style.height="unset";
             showcase.style.backgroundSize = "cover"; // Reset clip-path for other images
             showcase.style.backgroundPosition = "center"; // Optionally center other images
         }
