@@ -157,15 +157,17 @@ header a:hover{
     height:50%;
     padding:10px;
     text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
 #boxes .box img {
     width: 100%;      /* Makes the image scale within its container */
-    max-width: 90px; /* Limits the max width to prevent excessive scaling */
+    max-width: 150px; /* Limits the max width to prevent excessive scaling */
     height: 150px;    /* Ensures all images have the same height */
     object-fit: cover; /* Ensures the image fills the area without distortion */
     display: block;   /* Removes extra space below inline images */
-    margin: 0 auto;   /* Centers the image within the box */
+    margin: 0 auto;
 }
 
 /* Sidebar */
