@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dojo Admin Panel</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Karate Dojo Admin Panel</h1>
+    <nav>
+      <button onclick="showSection('dojo')">Dojo Info</button>
+      <button onclick="showSection('subscribers')">Subscribers</button>
+      <button onclick="showSection('programs')">Programs</button>
+      <button onclick="showSection('instructors')">Instructors</button>
+      <button onclick="showSection('highlights')">Highlights</button>
+    </nav>
+    
+    <!-- Dojo Info Section -->
+    <section id="dojo" class="admin-section">
+      <h2>Dojo General Info</h2>
+      <form id="dojoForm">
+        <input type="text" id="dojoName" placeholder="Dojo Name" required>
+        <input type="text" id="dojoHeroTitle" placeholder="Hero Title">
+        <input type="text" id="dojoHeroSubtitle" placeholder="Hero Subtitle">
+        <input type="text" id="dojoHeroImageUrl" placeholder="Hero Image URL">
+        <input type="date" id="dojoEstablishedDate" placeholder="Established Date">
+        <textarea id="dojoDescription" placeholder="Description"></textarea>
+        <button type="submit">Save/Update Dojo Info</button>
+      </form>
+      <div id="dojoInfo"></div>
+    </section>
+    
+    <!-- Subscribers Section -->
+    <section id="subscribers" class="admin-section" style="display:none;">
+      <h2>Newsletter Subscribers</h2>
+      <table id="subscribersTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Subscribed At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Programs Section -->
+    <section id="programs" class="admin-section" style="display:none;">
+      <h2>Martial Arts Programs</h2>
+      <form id="programForm">
+        <input type="hidden" id="programId">
+        <input type="text" id="programName" placeholder="Program Name" required>
+        <textarea id="programDescription" placeholder="Description"></textarea>
+        <input type="text" id="programImageUrl" placeholder="Image URL">
+        <input type="file" id="programImageBlob">
+        <button type="submit">Add/Update Program</button>
+        <button type="button" id="programCancelBtn" style="display:none;">Cancel</button>
+      </form>
+      <table id="programsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Desc</th>
+            <th>Image</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Instructors Section -->
+    <section id="instructors" class="admin-section" style="display:none;">
+      <h2>Instructors</h2>
+      <form id="instructorForm">
+        <input type="hidden" id="instructorId">
+        <input type="text" id="instructorName" placeholder="Name" required>
+        <input type="text" id="instructorRole" placeholder="Role" required>
+        <input type="text" id="instructorPhone" placeholder="Phone">
+        <input type="email" id="instructorEmail" placeholder="Email">
+        <input type="text" id="instructorPhotoUrl" placeholder="Photo URL">
+        <input type="file" id="instructorPhotoBlob">
+        <button type="submit">Add/Update Instructor</button>
+        <button type="button" id="instructorCancelBtn" style="display:none;">Cancel</button>
+      </form>
+      <table id="instructorsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Photo</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Highlights Section -->
+    <section id="highlights" class="admin-section" style="display:none;">
+      <h2>Highlights</h2>
+      <form id="highlightForm">
+        <input type="hidden" id="highlightId">
+        <input type="text" id="highlightTitle" placeholder="Title" required>
+        <textarea id="highlightContent" placeholder="Content"></textarea>
+        <button type="submit">Add/Update Highlight</button>
+        <button type="button" id="highlightCancelBtn" style="display:none;">Cancel</button>
+      </form>
+      <table id="highlightsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>

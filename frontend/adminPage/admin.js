@@ -1,0 +1,246 @@
+let section = 'dojo';
+
+// View switching
+function showSection(key) {
+  document.querySelectorAll('.admin-section').forEach(sec => sec.style.display = "none");
+  document.getElementById(key).style.display = "block";
+  section = key;
+}
+
+// INIT example data (should fetch from backend API in production)
+let dojoInfo = {
+  name: "Shorinji Karate Dojo",
+  hero_title: "Master The Art",
+  hero_subtitle: "Discipline. Defense. Confidence.",
+  hero_image_url: "",
+  established_date: "2010-06-18",
+  description: "A dojo for aspiring martial artists."
+};
+let subscribers = [
+  {id: 1, email: "student1@mail.com", subscribed_at: "2025-09-01 14:02"},
+];
+let programs = [
+  {id: 1, name: "Kids Karate", description: "For ages 6-10", image_url: "", image: null}
+];
+let instructors = [
+  {id: 1, name: "Sensei Bob", role: "Head Instructor", phone: "12345678", email: "bob@dojo.com", photo_url: "", photo: null}
+];
+let highlights = [
+  {id: 1, title: "Self Defense", content: "Essential self-defense techniques"}
+];
+
+// Dojo Info handlers
+document.getElementById('dojoForm').onsubmit = function(e){
+  e.preventDefault();
+  dojoInfo = {
+    name: document.getElementById('dojoName').value,
+    hero_title: document.getElementById('dojoHeroTitle').value,
+    hero_subtitle: document.getElementById('dojoHeroSubtitle').value,
+    hero_image_url: document.getElementById('dojoHeroImageUrl').value,
+    established_date: document.getElementById('dojoEstablishedDate').value,
+    description: document.getElementById('dojoDescription').value
+  };
+  renderDojoInfo();
+};
+
+function renderDojoInfo(){
+  let el = document.getElementById('dojoInfo');
+  el.innerHTML = `<strong>${dojoInfo.name}</strong><br>
+    <em>${dojoInfo.hero_title}</em> - ${dojoInfo.hero_subtitle} <br>
+    <img src="${dojoInfo.hero_image_url}" style="max-width:80px;" alt=""><br>
+    <b>Established:</b> ${dojoInfo.established_date} <br>
+    <i>${dojoInfo.description}</i>`;
+  // populate fields for editing
+  document.getElementById('dojoName').value = dojoInfo.name || "";
+  document.getElementById('dojoHeroTitle').value = dojoInfo.hero_title || "";
+  document.getElementById('dojoHeroSubtitle').value = dojoInfo.hero_subtitle || "";
+  document.getElementById('dojoHeroImageUrl').value = dojoInfo.hero_image_url || "";
+  document.getElementById('dojoEstablishedDate').value = dojoInfo.established_date || "";
+  document.getElementById('dojoDescription').value = dojoInfo.description || "";
+}
+renderDojoInfo();
+
+// Subscribers Table (READ/DELETE only)
+function renderSubscribers() {
+  let tbody = document.querySelector('#subscribersTable tbody');
+  tbody.innerHTML = "";
+  subscribers.forEach(sub =>
+    tbody.innerHTML += `<tr>
+      <td>${sub.id}</td>
+      <td>${sub.email}</td>
+      <td>${sub.subscribed_at}</td>
+      <td class="actions"><button class="delete" onclick="deleteSubscriber(${sub.id})">Delete</button></td>
+    </tr>`
+  );
+}
+function deleteSubscriber(id) {
+  subscribers = subscribers.filter(s => s.id !== id); renderSubscribers();
+}
+window.deleteSubscriber = deleteSubscriber;
+renderSubscribers();
+
+// Programs CRUD
+let editingProgram = null;
+document.getElementById('programForm').onsubmit = function(e){
+  e.preventDefault();
+  let name = document.getElementById('programName').value.trim();
+  let description = document.getElementById('programDescription').value.trim();
+  let image_url = document.getElementById('programImageUrl').value.trim();
+  let image = document.getElementById('programImageBlob').files[0] || null;
+  if(editingProgram){
+    let p = programs.find(pr => pr.id === editingProgram);
+    Object.assign(p, { name, description, image_url, image });
+    editingProgram = null;
+  } else {
+    programs.push({ id: Date.now(), name, description, image_url, image });
+  }
+  this.reset();
+  document.getElementById('programCancelBtn').style.display = "none";
+  renderPrograms();
+};
+function editProgram(id) {
+  let p = programs.find(x => x.id === id);
+  document.getElementById('programId').value = p.id;
+  document.getElementById('programName').value = p.name;
+  document.getElementById('programDescription').value = p.description;
+  document.getElementById('programImageUrl').value = p.image_url;
+  editingProgram = id;
+  document.getElementById('programCancelBtn').style.display = "inline-block";
+}
+document.getElementById('programCancelBtn').onclick = function(){
+  document.getElementById('programForm').reset(); editingProgram = null; this.style.display = "none";
+};
+function deleteProgram(id) {
+  programs = programs.filter(p => p.id !== id); renderPrograms();
+}
+window.editProgram = editProgram;
+window.deleteProgram = deleteProgram;
+function renderPrograms() {
+  let tbody = document.querySelector('#programsTable tbody');
+  tbody.innerHTML = "";
+  programs.forEach(p => {
+    tbody.innerHTML += `<tr>
+      <td>${p.id}</td>
+      <td>${p.name}</td>
+      <td>${p.description}</td>
+      <td><img src="${p.image_url}" style="max-width:40px"></td>
+      <td class="actions">
+        <button onclick="editProgram(${p.id})">Edit</button>
+        <button class="delete" onclick="deleteProgram(${p.id})">Delete</button>
+      </td>
+    </tr>`;
+  });
+}
+renderPrograms();
+
+// Instructors CRUD (similar pattern)
+let editingInstructor = null;
+document.getElementById('instructorForm').onsubmit = function(e){
+  e.preventDefault();
+  let name = document.getElementById('instructorName').value.trim();
+  let role = document.getElementById('instructorRole').value.trim();
+  let phone = document.getElementById('instructorPhone').value.trim();
+  let email = document.getElementById('instructorEmail').value.trim();
+  let photo_url = document.getElementById('instructorPhotoUrl').value.trim();
+  let photo = document.getElementById('instructorPhotoBlob').files[0] || null;
+  if(editingInstructor){
+    let ins = instructors.find(i => i.id === editingInstructor);
+    Object.assign(ins, { name, role, phone, email, photo_url, photo });
+    editingInstructor = null;
+  } else {
+    instructors.push({ id:Date.now(), name, role, phone, email, photo_url, photo });
+  }
+  this.reset();
+  document.getElementById('instructorCancelBtn').style.display = "none";
+  renderInstructors();
+};
+function editInstructor(id) {
+  let i = instructors.find(x => x.id === id);
+  document.getElementById('instructorId').value = i.id;
+  document.getElementById('instructorName').value = i.name;
+  document.getElementById('instructorRole').value = i.role;
+  document.getElementById('instructorPhone').value = i.phone;
+  document.getElementById('instructorEmail').value = i.email;
+  document.getElementById('instructorPhotoUrl').value = i.photo_url;
+  editingInstructor = id;
+  document.getElementById('instructorCancelBtn').style.display = "inline-block";
+}
+document.getElementById('instructorCancelBtn').onclick = function(){
+  document.getElementById('instructorForm').reset(); editingInstructor = null; this.style.display = "none";
+};
+function deleteInstructor(id) {
+  instructors = instructors.filter(i => i.id !== id); renderInstructors();
+}
+window.editInstructor = editInstructor;
+window.deleteInstructor = deleteInstructor;
+function renderInstructors() {
+  let tbody = document.querySelector('#instructorsTable tbody');
+  tbody.innerHTML = "";
+  instructors.forEach(i => {
+    tbody.innerHTML += `<tr>
+      <td>${i.id}</td>
+      <td>${i.name}</td>
+      <td>${i.role}</td>
+      <td>${i.email}</td>
+      <td>${i.phone}</td>
+      <td><img src="${i.photo_url}" style="max-width:40px"></td>
+      <td class="actions">
+        <button onclick="editInstructor(${i.id})">Edit</button>
+        <button class="delete" onclick="deleteInstructor(${i.id})">Delete</button>
+      </td>
+    </tr>`;
+  });
+}
+renderInstructors();
+
+// Highlights CRUD
+let editingHighlight = null;
+document.getElementById('highlightForm').onsubmit = function(e){
+  e.preventDefault();
+  let title = document.getElementById('highlightTitle').value.trim();
+  let content = document.getElementById('highlightContent').value.trim();
+  if(editingHighlight){
+    let h = highlights.find(hh => hh.id === editingHighlight);
+    Object.assign(h, { title, content });
+    editingHighlight = null;
+  } else {
+    highlights.push({ id:Date.now(), title, content });
+  }
+  this.reset();
+  document.getElementById('highlightCancelBtn').style.display = "none";
+  renderHighlights();
+};
+function editHighlight(id) {
+  let h = highlights.find(x => x.id === id);
+  document.getElementById('highlightId').value = h.id;
+  document.getElementById('highlightTitle').value = h.title;
+  document.getElementById('highlightContent').value = h.content;
+  editingHighlight = id;
+  document.getElementById('highlightCancelBtn').style.display = "inline-block";
+}
+document.getElementById('highlightCancelBtn').onclick = function(){
+  document.getElementById('highlightForm').reset(); editingHighlight = null; this.style.display = "none";
+};
+function deleteHighlight(id) {
+  highlights = highlights.filter(h => h.id !== id); renderHighlights();
+}
+window.editHighlight = editHighlight;
+window.deleteHighlight = deleteHighlight;
+function renderHighlights() {
+  let tbody = document.querySelector('#highlightsTable tbody');
+  tbody.innerHTML = "";
+  highlights.forEach(h => {
+    tbody.innerHTML += `<tr>
+      <td>${h.id}</td>
+      <td>${h.title}</td>
+      <td>${h.content}</td>
+      <td class="actions">
+        <button onclick="editHighlight(${h.id})">Edit</button>
+        <button class="delete" onclick="deleteHighlight(${h.id})">Delete</button>
+      </td>
+    </tr>`;
+  });
+}
+renderHighlights();
+
+showSection('dojo');
