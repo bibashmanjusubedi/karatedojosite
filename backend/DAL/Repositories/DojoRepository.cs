@@ -16,10 +16,9 @@ public class DojoRepository
     public IEnumerable<Dojo> GetAllDojos()
     {
         var Dojos = new List<Dojo>();
-        using var(conn = new SqliteConnection(_connectionString)
-        {
-            conn.Open();
-            using (var cmd = new SqliteCommand("SELECT *  FROM Dojo", conn))
+        using var conn = new SqliteConnection(_connectionString);
+        conn.Open();
+        using (var cmd = new SqliteCommand("SELECT * FROM Dojo", conn))
         using (var reader = cmd.ExecuteReader())
         {
             while (reader.Read())
@@ -37,7 +36,6 @@ public class DojoRepository
                 Dojos.Add(Dojo);
             }
         }
-    }
         return Dojos;
     }
 
@@ -64,6 +62,8 @@ public class DojoRepository
         return null;
     }
 
+
+
     public void InsertDojo(Dojo dojo)
     {
         using var conn = new SqliteConnection(_connectionString);
@@ -71,7 +71,7 @@ public class DojoRepository
         var sql = @"INSERT INTO Dojo (name,hero_title,hero_subtitle,hero_image_url,established_date,descriptio) VALUEs (@name,@hero_title,@hero_subtitle,@hero_image_url,@established_date,@description)";
         using var cmd = new SqliteCommand(sql, conn);
         cmd.Parameters.AddWithValue("@name", dojo.Name ?? (object)DBNull.Value);
-        cmd.Parameters.AddWithValue("@hero_title", dojo.HeroTitle ?? (obiject)DBNull.Value);
+        cmd.Parameters.AddWithValue("@hero_title", dojo.HeroTitle ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@hero_subtitle", dojo.HeroSubtitle ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@hero_image_url", dojo.HeroImageURL ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@established_date", dojo.EstablishedDate ?? (object)DBNull.Value);

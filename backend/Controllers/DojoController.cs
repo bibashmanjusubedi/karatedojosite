@@ -37,7 +37,7 @@ namespace backend.Controllers
             if (dojo == null)
                 return BadRequest();
             _dojoRepository.InsertDojo(dojo);
-            return CreatedAtAction(nameof(Get), new { id = dojo.Id }, dojo);
+            return CreatedAtAction(nameof(Details), new { id = dojo.Id }, dojo);
         }
 
         // PUT: api/Dojo/Update/{id}
