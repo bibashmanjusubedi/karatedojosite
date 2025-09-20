@@ -68,13 +68,14 @@ public class DojoRepository
     {
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
-        var sql = @"INSERT INTO Dojo (name,hero_title,hero_subtitle,hero_image_url,established_date,descriptio) VALUEs (@name,@hero_title,@hero_subtitle,@hero_image_url,@established_date,@description)";
+        var sql = @"INSERT INTO Dojo (name,hero_title,hero_subtitle,hero_image_url,established_date,description) VALUEs (@name,@hero_title,@hero_subtitle,@hero_image_url,@established_date,@description)";
         using var cmd = new SqliteCommand(sql, conn);
         cmd.Parameters.AddWithValue("@name", dojo.Name ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@hero_title", dojo.HeroTitle ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@hero_subtitle", dojo.HeroSubtitle ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@hero_image_url", dojo.HeroImageURL ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@established_date", dojo.EstablishedDate ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@description", dojo.Description ?? (object)DBNull.Value);
         cmd.ExecuteNonQuery();
     }
 
