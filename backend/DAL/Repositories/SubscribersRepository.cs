@@ -69,4 +69,25 @@ public class SubscribersRepository
         cmd.ExecuteNonQuery();
     }
 
+
+    public void UpdateSubscribers(Subscribers subscribers)
+    {
+        using var conn = new SqliteConnection(_connectionString);
+        conn.Open();
+        var sql = @"UPDATE Subscribers SET email=@Email WHERE id = @Id";
+        using var cmd = new SqliteCommand(sql,conn);
+        cmd.Parameters.AddWithValue("@Email",subscribers.Email ?? (object)DBNull.value);
+        cmd.Parameters.AddWithValue("@Id",subscribers.Id);
+        cmd.ExecuteNonQuery();
+    }
+
+    public void DeleteSubscribers(int id)
+    {
+        using var conn = new SqliteConnection(_connectionString);
+        conn.Open();
+        var sql = @"DELETE FROM Subscribers WHERE id = @Id";
+        using var cmd = new SqliteCommand(sql,conn);
+        cmd.Parameters.AddWithValue("@Id",id);
+        cmd.ExecuteNonQuery();
+    }
 }
