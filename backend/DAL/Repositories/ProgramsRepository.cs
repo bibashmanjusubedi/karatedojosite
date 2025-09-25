@@ -95,7 +95,7 @@ public class ProgramsRepository
     {
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
-        var sql = @"DELETE FROM Subscriber Where id = @id";
+        var sql = @"DELETE FROM Programs Where id = @id";
         using var cmd = new SqliteCommand(sql,conn);
         cmd.Parameters.AddWithValue("@id",id);
         cmd.ExecuteNonQuery();
