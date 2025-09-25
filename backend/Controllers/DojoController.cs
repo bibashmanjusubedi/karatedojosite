@@ -56,7 +56,7 @@ namespace backend.Controllers
         }
 
 
-        // DELETE: api/Dojo/Delete{id}
+        // DELETE: api/Dojo/Delete/{id}
         [HttpDelete("Delete/{id}")]
         public ActionResult Delete(int id)
         {

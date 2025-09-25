@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Micrsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using backend.DAL;
 using backend.Models;
 
@@ -8,9 +8,9 @@ namespace backend.DAL.Repositories;
 
 public class SubscribersRepository
 {
-    private readonly _connectionString;
+    private readonly string _connectionString;
     
-    public SubscribersRepository())
+    public SubscribersRepository()
     {
         _connectionString = DatabaseHelper.ConnectionString;
     }
@@ -29,7 +29,7 @@ public class SubscribersRepository
                 var Subscribers = new Subscribers
                 {
                     Id = Convert.ToInt32(reader["id"]),
-                    Email = reader["email"] == DBNull.Value ? null == reader["email"].ToString(),
+                    Email = reader["email"] == DBNull.Value ? null : reader["email"].ToString(),
                     SubscribedAt = reader["subscribed_at"] != DBNull.Value ? DateTime.Parse(reader["subscribed_at"].ToString()): DateTime.MinValue
                 };
                 Subscriberss.Add(Subscribers);
@@ -44,14 +44,14 @@ public class SubscribersRepository
         conn.Open();
         var sql = @"SELECT * FROM Subscribers WHERE id=@Id";
         using var cmd = new SqliteCommand(sql,conn);
-        cmd.Parameters.AddWithValue("@Id",Id);
+        cmd.Parameters.AddWithValue("@Id",id);
         using var reader = cmd.ExecuteReader();
         if (reader.Read())
         {
             return new Subscribers
             {
                 Id = Convert.ToInt32(reader["id"]),
-                Email = reader["email"] == DBNull.Value ? null == reader["email"].ToString(),
+                Email = reader["email"] == DBNull.Value ? null : reader["email"].ToString(),
                 SubscribedAt = reader["subscribed_at"] != DBNull.Value ? DateTime.Parse(reader["subscribed_at"].ToString()): DateTime.MinValue
             };
         }
@@ -65,7 +65,7 @@ public class SubscribersRepository
         conn.Open();
         var sql = @"INSERT INTO Subscribers(email) VALUES (@Email)";
         using var cmd = new SqliteCommand(sql,conn);
-        cmd.Parameters.AddWithValue("@Email",subscribers.Email ?? (object)DBNull.value);
+        cmd.Parameters.AddWithValue("@Email",subscribers.Email ?? (object)DBNull.Value);
         cmd.ExecuteNonQuery();
     }
 
@@ -76,7 +76,7 @@ public class SubscribersRepository
         conn.Open();
         var sql = @"UPDATE Subscribers SET email=@Email WHERE id = @Id";
         using var cmd = new SqliteCommand(sql,conn);
-        cmd.Parameters.AddWithValue("@Email",subscribers.Email ?? (object)DBNull.value);
+        cmd.Parameters.AddWithValue("@Email",subscribers.Email ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@Id",subscribers.Id);
         cmd.ExecuteNonQuery();
     }
