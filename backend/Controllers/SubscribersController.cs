@@ -22,7 +22,7 @@ namespace backend.Controllers
 
         // GET: api/Subscribers/Details/{id}
         [HttpGet("Details/{id}")]
-        public ActionResult<Dojo> Details(int id)
+        public ActionResult<Subscribers> Details(int id)
         {
             var subscribers = _subscribersRepository.GetParticularSubscribers(id);
             if (subscribers == null)
