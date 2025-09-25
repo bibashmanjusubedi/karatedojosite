@@ -37,4 +37,71 @@ public class ProgramsRepository
         }
         return Programss;
     }
+
+    public Programs GetParticularPrograms(int id)
+    {
+        using var conn = new SqliteConnection(_connectionString);
+        conn.Open();
+        var sql = @"SELECT * FROM Programs WHERE id=@Id";
+        using var cmd = new SqliteCommand(sql,conn);
+        cmd.Parameters.AddWithValue("@id",id);
+        using var reader = cmd.ExecuteReader();
+        if (reader.Read())
+        {
+            return new new Programs
+            {
+                Id = Convert.ToInt32(reader["id"]),
+                Name = reader["name"].ToString(),
+                Description = reader["description"] == DBNull.Value ? null : reader["description"].ToString(),
+                ImageUrl = reader["image_url"] == DBNull.Value ? null : reader["image_url"].ToString(),
+                Image = reader["image"] == DBNull.Value ? null : (byte[])reader["image"]
+            };
+        }
+        return null;
+    }
+
+    public void InsertPrograms(Programs programs)
+    {
+        using var conn = new SqliteConnection(_connectionString);
+        conn.Open();
+        var sql = @"INSERT INTO Programs(name,description,image_url,image) VALUES (@name,@description,@image_url,@image);"
+        using var cmd = new SqliteCommand(sql,conn);
+        cmd.Parameters.AddWithValue("@name",programs.Name);
+        cmd.Parameters.AddWithValue("@description",programs.Description ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@image_url",programs.ImageUrl ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@image",programs.Image ?? (object)DBNull.Value);
+        cmd.ExecuteNonQuery();
+    }
+
+    public void UpdatePrograms(Programs programs)
+    {
+        using var conn = new SqliteConnection(_connectionString);
+        conn.Open();
+        var sql = @"UPDATE Programs
+                    SET name = @name,
+                    description = @description,
+                    image_url = @image_url,
+                    image=@image
+                    WHERE id = @id";
+        using var sql = new SqliteCommand(sql,conn);
+        cmd.Parameters.AddWithValue("@name",programs.Name);
+        cmd.Parameters.AddWithValue("@description",programs.Description ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@image_url",programs.ImageUrl ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@image",programs.Image ?? (object)DBNull.Value);
+        cmd.ExecuteNonQuery();
+    }
+
+    public void DeletePrograms(int id)
+    {
+        using var conn = new SqliteConnection(_connectionString);
+        conn.Open();
+        var sql = @"DELETE FROM Subscriber Where id = @id";
+        using var cmd = new SqliteCommand(sql,conn);
+        cmd.Parameters.AddWithValue("@id",id);
+        cmd.ExecuteNonQuery();
+    }
+
+
+
+
 }
