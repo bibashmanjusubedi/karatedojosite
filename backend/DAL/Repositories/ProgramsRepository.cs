@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.SQlite;
+using Microsoft.Data.Sqlite;
 using backend.DAL;
 using backend.Models;
 
@@ -21,7 +21,7 @@ public class ProgramsRepository
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
         var sql = @"SELECT * FROM Programs";
-        using var cmd = new SqliteCommand(sql,conn);
+        using var cmd = new SqliteCommand(sql, conn);
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
@@ -42,13 +42,13 @@ public class ProgramsRepository
     {
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
-        var sql = @"SELECT * FROM Programs WHERE id=@Id";
-        using var cmd = new SqliteCommand(sql,conn);
-        cmd.Parameters.AddWithValue("@id",id);
+        var sql = @"SELECT * FROM Programs WHERE id=@id";
+        using var cmd = new SqliteCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@id", id);
         using var reader = cmd.ExecuteReader();
         if (reader.Read())
         {
-            return new new Programs
+            return new Programs
             {
                 Id = Convert.ToInt32(reader["id"]),
                 Name = reader["name"].ToString(),
@@ -60,16 +60,17 @@ public class ProgramsRepository
         return null;
     }
 
+
     public void InsertPrograms(Programs programs)
     {
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
-        var sql = @"INSERT INTO Programs(name,description,image_url,image) VALUES (@name,@description,@image_url,@image);"
-        using var cmd = new SqliteCommand(sql,conn);
-        cmd.Parameters.AddWithValue("@name",programs.Name);
-        cmd.Parameters.AddWithValue("@description",programs.Description ?? (object)DBNull.Value);
-        cmd.Parameters.AddWithValue("@image_url",programs.ImageUrl ?? (object)DBNull.Value);
-        cmd.Parameters.AddWithValue("@image",programs.Image ?? (object)DBNull.Value);
+        var sql = @"INSERT INTO Programs(name,description,image_url,image) VALUES (@name,@description,@image_url,@image)";
+        using var cmd = new SqliteCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@name", programs.Name);
+        cmd.Parameters.AddWithValue("@description", programs.Description ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@image_url", programs.ImageUrl ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@image", programs.Image ?? (object)DBNull.Value);
         cmd.ExecuteNonQuery();
     }
 
@@ -83,11 +84,11 @@ public class ProgramsRepository
                     image_url = @image_url,
                     image=@image
                     WHERE id = @id";
-        using var sql = new SqliteCommand(sql,conn);
-        cmd.Parameters.AddWithValue("@name",programs.Name);
-        cmd.Parameters.AddWithValue("@description",programs.Description ?? (object)DBNull.Value);
-        cmd.Parameters.AddWithValue("@image_url",programs.ImageUrl ?? (object)DBNull.Value);
-        cmd.Parameters.AddWithValue("@image",programs.Image ?? (object)DBNull.Value);
+        using var cmd = new SqliteCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@name", programs.Name);
+        cmd.Parameters.AddWithValue("@description", programs.Description ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@image_url", programs.ImageUrl ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@image", programs.Image ?? (object)DBNull.Value);
         cmd.ExecuteNonQuery();
     }
 
@@ -96,12 +97,9 @@ public class ProgramsRepository
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
         var sql = @"DELETE FROM Programs Where id = @id";
-        using var cmd = new SqliteCommand(sql,conn);
-        cmd.Parameters.AddWithValue("@id",id);
+        using var cmd = new SqliteCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@id", id);
         cmd.ExecuteNonQuery();
     }
-
-
-
 
 }

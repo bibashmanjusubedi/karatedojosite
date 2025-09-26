@@ -14,7 +14,7 @@ namespace backend.Controllers
         // GET: api/Programs or api/Programs/Index
         [HttpGet]
         [HttpGet("Index")]
-        public ActionResult<IEnumeraIEnumerable<Programs>> Index()
+        public ActionResult<IEnumerable<Programs>> Index()
         {
             var programs = _programsRepository.GetAllProgramss();
             return Ok(programs);
@@ -39,6 +39,30 @@ namespace backend.Controllers
                 return BadRequest();
             _programsRepository.InsertPrograms(programs);
             return CreatedAtAction(nameof(Details),new{id=programs.Id},programs);
+        }
+
+         // PUT: api/Programs/Update/{id}
+        [HttpPut("Update/{id}")]
+        public ActionResult Update(int id, [FromBody] Programs programs)
+        {
+            if(programs == null || programs.Id != id)
+                return BadRequest();
+
+            var existing = _programsRepository.GetParticularPrograms(id);
+            if (existing == null)
+                return NotFound();
+            _programsRepository.UpdatePrograms(programs);
+            return NoContent();
+        }
+
+        // DELETE: api/Programs/Delete/{id}
+        public ActionResult Delete(int id)
+        {
+            var existing = _programsRepository.GetParticularPrograms(id);
+            if (existing == null)
+                return NotFound();
+            _programsRepository.DeletePrograms(id);
+            return NoContent();
         }
 
         
