@@ -85,6 +85,7 @@ public class ProgramsRepository
                     image=@image
                     WHERE id = @id";
         using var cmd = new SqliteCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@id", programs.Id);
         cmd.Parameters.AddWithValue("@name", programs.Name);
         cmd.Parameters.AddWithValue("@description", programs.Description ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@image_url", programs.ImageUrl ?? (object)DBNull.Value);

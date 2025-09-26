@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("api/Controller")]
+    [Route("api/[controller]")]
     public class ProgramsController: ControllerBase
     {
         private readonly ProgramsRepository _programsRepository = new ProgramsRepository();
@@ -56,6 +56,7 @@ namespace backend.Controllers
         }
 
         // DELETE: api/Programs/Delete/{id}
+        [HttpDelete("Delete/{id}")]
         public ActionResult Delete(int id)
         {
             var existing = _programsRepository.GetParticularPrograms(id);
