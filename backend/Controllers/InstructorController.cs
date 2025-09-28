@@ -22,6 +22,7 @@ namespace backend.Controllers
         }
 
         // GET: api/Instructor/Details/{id}
+        [HttpGet("Details/{id}")]
         public ActionResult<Programs> Details(int id)
         {
             var instructor = _instructorRepository.GetParticularInstructor(id);
@@ -31,12 +32,13 @@ namespace backend.Controllers
         }
 
         // POST: api/Instructor/Create
+        [HttpPost("Create")]
         public ActionResult Create([FromBody] Instructor instructor)
         {
             if(instructor == null)
                 return BadRequest();
             _instructorRepository.InsertInstructor(instructor);
-            return CreatedAtAction(nameof(Instructor),new{id=instructor.Id},instructor);
+            return CreatedAtAction(nameof(Details),new{id=instructor.Id},instructor);
         } 
 
         // PUT: api/Instructor/Update/{id}
