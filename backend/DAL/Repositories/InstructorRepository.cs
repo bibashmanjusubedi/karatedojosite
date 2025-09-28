@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 using backend.DAL;
+using backend.Models;
 
 namespace backend.DAL.Repositories;
 
@@ -38,7 +39,7 @@ public class InstructorRepository
         return Instructors;
     }
 
-    public Instructor GetParticularInstructor()
+    public Instructor GetParticularInstructor(int id)
     {
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
@@ -48,7 +49,7 @@ public class InstructorRepository
         using var reader = cmd.ExecuteReader();
         if (reader.Read())
         {
-            return new Programs
+            return new Instructor
             {
                 Id = Convert.ToInt32(reader["id"]),
                 Name = reader["name"].ToString(),
@@ -57,12 +58,12 @@ public class InstructorRepository
                 Email = reader["email"] == DBNull.Value ? null : reader["email"].ToString(),
                 PhotoUrl = reader["photo_url"] == DBNull.Value ? null : reader["photo_url"].ToString(),
                 Photo = reader["photo"] == DBNull.Value ? null : (byte[])reader["photo"]
-            }
+            };
         }
         return null;
     }
 
-    public void InstructorInstructor(Instructor instructor)
+    public void InsertInstructor(Instructor instructor)
     {
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
@@ -95,7 +96,7 @@ public class InstructorRepository
         cmd.Parameters.AddWithValue("phone", instructor.Phone ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("email", instructor.Email ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@photo_url", instructor.PhotoUrl ?? (object)DBNull.Value);
-        cmd.Parameters.AddWithValue("@photo", photo.Photo ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@photo", instructor.Photo ?? (object)DBNull.Value);
         cmd.ExecuteNonQuery();
     }
 
