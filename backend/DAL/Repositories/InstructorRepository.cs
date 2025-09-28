@@ -31,7 +31,7 @@ public class InstructorRepository
                 Role = reader["role"].ToString(),
                 Phone = reader["phone"] == DBNull.Value ? null : reader["phone"].ToString(),
                 PhotoUrl = reader["photo_url"] == DBNull.Value ? null : reader["photo_url"].ToString(),
-                Photo = reader["photo"] == DBNull.Value ? null : (byte[]) reader["photo"]
+                Photo = reader["photo"] == DBNull.Value ? null : (byte[])reader["photo"]
             };
             Instructors.Add(Instructor);
         }
@@ -61,6 +61,26 @@ public class InstructorRepository
         }
         return null;
     }
+
+    public void InstructorInstructor(Instructor instructor)
+    {
+        using var conn = new SqliteConnection(_connectionString);
+        conn.Open();
+        var sql = @"INSERT INTO Instructor (name, role, phone, email, photo_url, photo) 
+                VALUES (@name, @role, @phone, @email, @photo_url, @photo)";
+        using var cmd = new SqliteCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@name", instructor.Name);
+        cmd.Parameters.AddWithValue("@role", instructor.Role);
+        cmd.Parameters.AddWithValue("@phone", instructor.Phone ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@email", instructor.Email ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@photo_url", instructor.PhotoUrl ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@photo", instructor.Photo ?? (object)DBNull.Value);
+
+        cmd.ExecuteNonQuery();
+    }
+
+
+
 
     public void UpdateInstructor(Instructor instructor)
     {
