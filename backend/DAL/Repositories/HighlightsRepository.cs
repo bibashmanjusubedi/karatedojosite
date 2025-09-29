@@ -80,6 +80,8 @@ public class HighlightsRepository
         cmd.Parameters.AddWithValue("@title",highlights.Title);
         cmd.Parameters.AddWithValue("@content",highlights.Content ?? (object)DBNull.Value);
         
+        cmd.ExecuteNonQuery();
+
     }
 
     public void DeleteHighlights(int id)

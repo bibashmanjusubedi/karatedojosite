@@ -11,7 +11,7 @@ namespace backend.Controllers
     {
         private readonly HighlightsRepository _highlightsRepository = new HighlightsRepository();
     
-        // GET: api/Highlights or api/Programs/Instructor
+        // GET: api/Highlights or api/Highlights/Instructor
         [HttpGet]
         [HttpGet("Index")]
         public ActionResult<IEnumerable<Highlights>> Index()
