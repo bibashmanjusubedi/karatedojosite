@@ -23,7 +23,7 @@ namespace backend.Controllers
 
         // GET: api/Instructor/Details/{id}
         [HttpGet("Details/{id}")]
-        public ActionResult<Programs> Details(int id)
+        public ActionResult<Instructor> Details(int id)
         {
             var instructor = _instructorRepository.GetParticularInstructor(id);
             if (instructor == null)
