@@ -27,8 +27,8 @@ public class HighlightsRepository
         {
             var Highlights = new Highlights
             {
-                Id = Convert.ToInt32(reader[id"]),
-                Name = reader.["name"].ToString();
+                Id = Convert.ToInt32(reader["id"]),
+                Title = reader["title"].ToString(),
                 Content = reader["content"] == DBNull.Value ? null : reader["content"].ToString(),
             };
             Highlightss.Add(Highlights);
@@ -36,7 +36,7 @@ public class HighlightsRepository
         return Highlightss;
     }
 
-    public Highlights GetParticularHighLights(int id)
+    public Highlights GetParticularHighlights(int id)
     {
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
@@ -48,8 +48,8 @@ public class HighlightsRepository
         {
             return new Highlights
             {
-                Id = Convert.ToInt32(reader[id"]),
-                Title = reader.["title"].ToString();
+                Id = Convert.ToInt32(reader["id"]),
+                Title = reader["title"].ToString(),
                 Content = reader["content"] == DBNull.Value ? null : reader["content"].ToString(),
             };
         }
@@ -62,8 +62,8 @@ public class HighlightsRepository
         conn.Open();
         var sql = @"INSERT INTO HighLights (title, content) VALUES (@title, @content)";
         using var cmd = new SqliteCommand(sql, conn);
-        cmd.AddWithValue("@title",highlights.title);
-        cmd.AddWithValue("@content",highlights.content ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@title",highlights.Title);
+        cmd.Parameters.AddWithValue("@content",highlights.Content ?? (object)DBNull.Value);
         
         cmd.ExecuteNonQuery();
 
@@ -77,8 +77,8 @@ public class HighlightsRepository
         using var cmd = new SqliteCommand(sql, conn);
         
         cmd.Parameters.AddWithValue("@id", highlights.Id);
-        cmd.AddWithValue("@title",highlights.title);
-        cmd.AddWithValue("@content",highlights.content ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@title",highlights.Title);
+        cmd.Parameters.AddWithValue("@content",highlights.Content ?? (object)DBNull.Value);
         
     }
 

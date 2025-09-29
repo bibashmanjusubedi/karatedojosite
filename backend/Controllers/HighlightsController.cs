@@ -47,7 +47,7 @@ namespace backend.Controllers
             if(highlights == null || highlights.Id != id)
                 return BadRequest();
 
-            var existing = _highlightsRepository.GetParticularHighLights(id);
+            var existing = _highlightsRepository.GetParticularHighlights(id);
             if (existing == null)
                 return NotFound();
             _highlightsRepository.UpdateHighlights(highlights);
