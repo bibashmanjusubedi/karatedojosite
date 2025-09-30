@@ -8,14 +8,32 @@ function showSection(key) {
 }
 
 // INIT example data (should fetch from backend API in production)
-let dojoInfo = {
-  name: "Shorinji Karate Dojo",
-  hero_title: "Master The Art",
-  hero_subtitle: "Discipline. Defense. Confidence.",
-  hero_image_url: "",
-  established_date: "2010-06-18",
-  description: "A dojo for aspiring martial artists."
-};
+// let dojoInfo = {
+//   name: "Shorinji Karate Dojo",
+//   hero_title: "Master The Art",
+//   hero_subtitle: "Discipline. Defense. Confidence.",
+//   hero_image_url: "",
+//   established_date: "2010-06-18",
+//   description: "A dojo for aspiring martial artists."
+// };
+let dojoInfo = {};
+
+function loadDojoInfo() {
+  fetch("https://localhost:7286/api/Dojo")
+    .then(response => response.json())
+    .then(data => {
+      dojoInfo = Array.isArray(data) ? data[0] : data;
+      renderDojoInfo();
+    })
+    .catch(error => {
+      document.getElementById('dojoInfo').innerHTML = "<p>Error loading dojo info.</p>";
+      console.error("Error fetching dojo info:", error);
+    });
+}
+
+// Replace original direct renderDojoInfo() call with API fetch
+loadDojoInfo();
+
 let subscribers = [
   {id: 1, email: "student1@mail.com", subscribed_at: "2025-09-01 14:02"},
 ];
@@ -45,10 +63,10 @@ document.getElementById('dojoForm').onsubmit = function(e){
 
 function renderDojoInfo(){
   let el = document.getElementById('dojoInfo');
-  el.innerHTML = `<strong>${dojoInfo.name}</strong><br>
-    <em>${dojoInfo.hero_title}</em> - ${dojoInfo.hero_subtitle} <br>
-    <img src="${dojoInfo.hero_image_url}" style="max-width:80px;" alt=""><br>
-    <b>Established:</b> ${dojoInfo.established_date} <br>
+  el.innerHTML = `<strong>${dojoInfo.name || ""}</strong><br>
+    <em>${dojoInfo.heroTitle || ""}</em> - ${dojoInfo.heroSubtitle || ""} <br>
+    <img src="${dojoInfo.heroImageURL || ""}" style="max-width:80px;" alt=""><br>
+    <b>Established:</b> ${dojoInfo.establishedDate || ""} <br>
     <i>${dojoInfo.description}</i>`;
   // populate fields for editing
   document.getElementById('dojoName').value = dojoInfo.name || "";
@@ -58,7 +76,7 @@ function renderDojoInfo(){
   document.getElementById('dojoEstablishedDate').value = dojoInfo.established_date || "";
   document.getElementById('dojoDescription').value = dojoInfo.description || "";
 }
-renderDojoInfo();
+// renderDojoInfo();
 
 // Subscribers Table (READ/DELETE only)
 function renderSubscribers() {
