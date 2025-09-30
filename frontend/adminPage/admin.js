@@ -68,9 +68,23 @@ function loadPrograms(){
     });
 }
 
-let instructors = [
-  {id: 1, name: "Sensei Bob", role: "Head Instructor", phone: "12345678", email: "bob@dojo.com", photo_url: "", photo: null}
-];
+// let instructors = [
+//   {id: 1, name: "Sensei Bob", role: "Head Instructor", phone: "12345678", email: "bob@dojo.com", photo_url: "", photo: null}
+// ];
+let instructors = [];
+
+function loadInstructors(){
+  fetch("https://localhost:7286/api/Instructor")
+    .then(response => response.json())
+    .then(data => {
+        instructors = Array.isArray(data) ? data : [],
+        renderInstructors();
+    })
+    .catch(error => {
+      console.error("Error fetching instructors: ",error);
+    });
+}
+
 let highlights = [
   {id: 1, title: "Self Defense", content: "Essential self-defense techniques"}
 ];
@@ -239,7 +253,8 @@ function renderInstructors() {
     </tr>`;
   });
 }
-renderInstructors();
+loadInstructors();
+// renderInstructors();
 
 // Highlights CRUD
 let editingHighlight = null;

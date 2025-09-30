@@ -31,6 +31,7 @@ public class InstructorRepository
                 Name = reader["name"].ToString(),
                 Role = reader["role"].ToString(),
                 Phone = reader["phone"] == DBNull.Value ? null : reader["phone"].ToString(),
+                Email = reader["email"] == DBNull.Value ? null : reader["email"].ToString(),
                 PhotoUrl = reader["photo_url"] == DBNull.Value ? null : reader["photo_url"].ToString(),
                 Photo = reader["photo"] == DBNull.Value ? null : (byte[])reader["photo"]
             };
