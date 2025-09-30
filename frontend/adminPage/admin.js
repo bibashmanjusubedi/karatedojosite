@@ -51,9 +51,23 @@ function loadSubscribers(){
     });
 } 
 
-let programs = [
-  {id: 1, name: "Kids Karate", description: "For ages 6-10", image_url: "", image: null}
-];
+// let programs = [
+//   {id: 1, name: "Kids Karate", description: "For ages 6-10", image_url: "", image: null}
+
+let programs = [];
+
+function loadPrograms(){
+  fetch("https://localhost:7286/api/Programs")
+    .then(response => response.json())
+    .then(data =>{
+      programs = Array.isArray(data) ? data : [],
+      renderPrograms();
+    })
+    .catch(error => {
+      console.error("Error fetching programs :", error);
+    });
+}
+
 let instructors = [
   {id: 1, name: "Sensei Bob", role: "Head Instructor", phone: "12345678", email: "bob@dojo.com", photo_url: "", photo: null}
 ];
@@ -156,7 +170,7 @@ function renderPrograms() {
       <td>${p.id}</td>
       <td>${p.name}</td>
       <td>${p.description}</td>
-      <td><img src="${p.image_url}" style="max-width:40px"></td>
+      <td><img src="${p.imageUrl}" style="max-width:40px"></td>
       <td class="actions">
         <button onclick="editProgram(${p.id})">Edit</button>
         <button class="delete" onclick="deleteProgram(${p.id})">Delete</button>
@@ -164,7 +178,8 @@ function renderPrograms() {
     </tr>`;
   });
 }
-renderPrograms();
+// renderPrograms();
+loadPrograms();
 
 // Instructors CRUD (similar pattern)
 let editingInstructor = null;
