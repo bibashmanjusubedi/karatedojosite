@@ -85,9 +85,22 @@ function loadInstructors(){
     });
 }
 
-let highlights = [
-  {id: 1, title: "Self Defense", content: "Essential self-defense techniques"}
-];
+// let highlights = [
+//   {id: 1, title: "Self Defense", content: "Essential self-defense techniques"}
+// ];
+let highlights = [];
+
+function loadHighlights(){
+  fetch("https://localhost:7286/api/Highlights")
+    .then(response => response.json())
+    .then(data => {
+      highlights = Array.isArray(data) ? data: [];
+      renderHighlights();
+    })
+    .catch(error => {
+      console.error("Error fetching highlights :",error);
+    })
+}
 
 // Dojo Info handlers
 document.getElementById('dojoForm').onsubmit = function(e){
@@ -304,6 +317,7 @@ function renderHighlights() {
     </tr>`;
   });
 }
-renderHighlights();
+// renderHighlights();
+loadHighlights();
 
 showSection('dojo');
