@@ -34,9 +34,23 @@ function loadDojoInfo() {
 // Replace original direct renderDojoInfo() call with API fetch
 loadDojoInfo();
 
-let subscribers = [
-  {id: 1, email: "student1@mail.com", subscribed_at: "2025-09-01 14:02"},
-];
+// let subscribers = [
+//   {id: 2, email: "student1@mail.com", subscribed_at: "2025-09-01 14:02"},
+// ];
+let subscribers = [];
+
+function loadSubscribers(){
+  fetch("https://localhost:7286/api/Subscribers")
+    .then(response => response.json())
+    .then(data => {
+      subscribers = Array.isArray(data) ? data : [];
+      renderSubscribers();
+    })
+    .catch(error => {
+      console.error("Error fetching subscribers:", error);
+    });
+} 
+
 let programs = [
   {id: 1, name: "Kids Karate", description: "For ages 6-10", image_url: "", image: null}
 ];
@@ -74,7 +88,7 @@ function renderDojoInfo(){
   document.getElementById('dojoHeroSubtitle').value = dojoInfo.hero_subtitle || "";
   document.getElementById('dojoHeroImageUrl').value = dojoInfo.hero_image_url || "";
   document.getElementById('dojoEstablishedDate').value = dojoInfo.established_date || "";
-  document.getElementById('dojoDescription').value = dojoInfo.description || "";
+  document.getElementById('dojoDescription').value = dojoInfo.Description || "";
 }
 // renderDojoInfo();
 
@@ -86,7 +100,7 @@ function renderSubscribers() {
     tbody.innerHTML += `<tr>
       <td>${sub.id}</td>
       <td>${sub.email}</td>
-      <td>${sub.subscribed_at}</td>
+      <td>${sub.subscribedAt}</td>
       <td class="actions"><button class="delete" onclick="deleteSubscriber(${sub.id})">Delete</button></td>
     </tr>`
   );
@@ -95,7 +109,8 @@ function deleteSubscriber(id) {
   subscribers = subscribers.filter(s => s.id !== id); renderSubscribers();
 }
 window.deleteSubscriber = deleteSubscriber;
-renderSubscribers();
+// renderSubscribers();
+loadSubscribers();
 
 // Programs CRUD
 let editingProgram = null;
