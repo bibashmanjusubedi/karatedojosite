@@ -115,15 +115,39 @@ document.getElementById('dojoForm').onsubmit = function(e){
     description: document.getElementById('dojoDescription').value
   };
 
-  fetch("https://localhost:7286/api/Dojo/Create", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
+  // First: Checks if the dojo already exists
+  fetch("https://localhost:7286/api/Dojo")
+  .then(response =>{
+    if(!response.ok) throw new Error("Failed to fetch dojo data");
+    return response.json();
+  })
+  .then(dojos => {
+    if (!dojos || dojos.length === 0) {
+      // No dojo exists, create new
+      return fetch("https://localhost:7286/api/Dojo/Create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+    } else {
+      // Dojo exists, update the first one
+      const existingDojo = dojos[0];
+      return fetch(`https://localhost:7286/api/Dojo/Update/${existingDojo.id}`, {
+        method: "PUT", // or "POST", depends on your API
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ...payload,
+          id: existingDojo.id // include ID if required by backend
+        })
+      });
+    }
   })
   .then(response => {
-    if (!response.ok) throw new Error("Failed to save dojo info");
+    if(!response.ok) throw new Error("Failed to save dojo info");
     return response.json();
   })
   .then(data => {
@@ -131,10 +155,35 @@ document.getElementById('dojoForm').onsubmit = function(e){
     renderDojoInfo();
     alert("Dojo information saved!");
   })
-  .catch(error => {
+  .catch(error =>{
     alert("Error saving dojo info");
-    console.error("Error:", error);
+    console.error("Error : ",error);
   });
+
+
+
+
+
+  // fetch("https://localhost:7286/api/Dojo/Create", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json"
+  //   },
+  //   body: JSON.stringify(payload)
+  // })
+  // .then(response => {
+  //   if (!response.ok) throw new Error("Failed to save dojo info");
+  //   return response.json();
+  // })
+  // .then(data => {
+  //   dojoInfo = data;
+  //   renderDojoInfo();
+  //   alert("Dojo information saved!");
+  // })
+  // .catch(error => {
+  //   alert("Error saving dojo info");
+  //   console.error("Error:", error);
+  // });
   // dojoInfo = {
   //   name: document.getElementById('dojoName').value,
   //   hero_title: document.getElementById('dojoHeroTitle').value,
