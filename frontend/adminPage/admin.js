@@ -105,15 +105,45 @@ function loadHighlights(){
 // Dojo Info handlers
 document.getElementById('dojoForm').onsubmit = function(e){
   e.preventDefault();
-  dojoInfo = {
+  const payload = {
     name: document.getElementById('dojoName').value,
     hero_title: document.getElementById('dojoHeroTitle').value,
-    hero_subtitle: document.getElementById('dojoHeroSubtitle').value,
-    hero_image_url: document.getElementById('dojoHeroImageUrl').value,
-    established_date: document.getElementById('dojoEstablishedDate').value,
+    heroTitle: document.getElementById('dojoHeroTitle').value,
+    heroSubtitle: document.getElementById('dojoHeroSubtitle').value,
+    heroImageURL: document.getElementById('dojoHeroImageUrl').value,
+    establishedDate: document.getElementById('dojoEstablishedDate').value,
     description: document.getElementById('dojoDescription').value
   };
-  renderDojoInfo();
+
+  fetch("https://localhost:7286/api/Dojo/Create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(response => {
+    if (!response.ok) throw new Error("Failed to save dojo info");
+    return response.json();
+  })
+  .then(data => {
+    dojoInfo = data;
+    renderDojoInfo();
+    alert("Dojo information saved!");
+  })
+  .catch(error => {
+    alert("Error saving dojo info");
+    console.error("Error:", error);
+  });
+  // dojoInfo = {
+  //   name: document.getElementById('dojoName').value,
+  //   hero_title: document.getElementById('dojoHeroTitle').value,
+  //   hero_subtitle: document.getElementById('dojoHeroSubtitle').value,
+  //   hero_image_url: document.getElementById('dojoHeroImageUrl').value,
+  //   established_date: document.getElementById('dojoEstablishedDate').value,
+  //   description: document.getElementById('dojoDescription').value
+  // };
+  // renderDojoInfo();
 };
 
 function renderDojoInfo(){
@@ -125,11 +155,11 @@ function renderDojoInfo(){
     <i>${dojoInfo.description}</i>`;
   // populate fields for editing
   document.getElementById('dojoName').value = dojoInfo.name || "";
-  document.getElementById('dojoHeroTitle').value = dojoInfo.hero_title || "";
-  document.getElementById('dojoHeroSubtitle').value = dojoInfo.hero_subtitle || "";
-  document.getElementById('dojoHeroImageUrl').value = dojoInfo.hero_image_url || "";
-  document.getElementById('dojoEstablishedDate').value = dojoInfo.established_date || "";
-  document.getElementById('dojoDescription').value = dojoInfo.Description || "";
+  document.getElementById('dojoHeroTitle').value = dojoInfo.heroTitle || "";
+  document.getElementById('dojoHeroSubtitle').value = dojoInfo.heroSubtitle || "";
+  document.getElementById('dojoHeroImageUrl').value = dojoInfo.heroImageURL || "";
+  document.getElementById('dojoEstablishedDate').value = dojoInfo.establishedDate || "";
+  document.getElementById('dojoDescription').value = dojoInfo.description || "";
 }
 // renderDojoInfo();
 
