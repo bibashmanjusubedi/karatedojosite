@@ -37,3 +37,28 @@ document.addEventListener("DOMContentLoaded", () => {
     changeBackground();
     setInterval(changeBackground, 3000);
 });
+
+document.getElementById('subscribeForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('emailInput').value;
+    const payload = { email: email };
+
+    try {
+        const response = await fetch('https://localhost:7286/api/Subscribers/Create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            alert('Subscription successful!'); // You can handle result here if needed
+        } else {
+            alert('Failed to subscribe. Please try again.');
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+});
