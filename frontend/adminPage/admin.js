@@ -303,7 +303,21 @@ document.getElementById('programCancelBtn').onclick = function(){
   document.getElementById('programForm').reset(); editingProgram = null; this.style.display = "none";
 };
 function deleteProgram(id) {
-  programs = programs.filter(p => p.id !== id); renderPrograms();
+  // programs = programs.filter(p => p.id !== id); renderPrograms();
+  if (!confirm('Really delete this program?')) return;
+
+  fetch(`https://localhost:7286/api/Programs/Delete/${id}`, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    if (!response.ok) throw new Error("Failed to delete program");
+    // Remove from local list and update table
+    programs = programs.filter(p => p.id !== id);
+    renderPrograms();
+  })
+  .catch(error => {
+    alert(error.message);
+  });
 }
 window.editProgram = editProgram;
 window.deleteProgram = deleteProgram;
