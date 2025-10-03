@@ -22,8 +22,15 @@ function loadDojoInfo() {
   fetch("https://localhost:7286/api/Dojo")
     .then(response => response.json())
     .then(data => {
-      dojoInfo = Array.isArray(data) ? data[0] : data;
-      renderDojoInfo();
+      // Handle cases: undefined, null, empty array, empty object
+      if (!data || (Array.isArray(data) && data.length === 0)) {
+        dojoInfo = {}; // Use empty object for blank fields in UI
+      } else {
+        dojoInfo = Array.isArray(data) ? data[0] || {} : data;
+      }
+      renderDojoInfo(); // This will always work with a valid object
+      // dojoInfo = Array.isArray(data) ? data[0] : data;
+      // renderDojoInfo();
     })
     .catch(error => {
       document.getElementById('dojoInfo').innerHTML = "<p>Error loading dojo info.</p>";
@@ -196,12 +203,21 @@ document.getElementById('dojoForm').onsubmit = function(e){
 };
 
 function renderDojoInfo(){
+  dojoInfo = dojoInfo || {};
   let el = document.getElementById('dojoInfo');
+  let heroLine = "";
+  if (dojoInfo.heroTitle && dojoInfo.heroSubtitle) {
+    heroLine = `<em>${dojoInfo.heroTitle}</em> - ${dojoInfo.heroSubtitle} <br>`;
+  } else if (dojoInfo.heroTitle) {
+    heroLine = `<em>${dojoInfo.heroTitle}</em><br>`;
+  } else if (dojoInfo.heroSubtitle) {
+    heroLine = `${dojoInfo.heroSubtitle}<br>`;
+  }
   el.innerHTML = `<strong>${dojoInfo.name || ""}</strong><br>
-    <em>${dojoInfo.heroTitle || ""}</em> - ${dojoInfo.heroSubtitle || ""} <br>
+    ${heroLine}
     <img src="${dojoInfo.heroImageURL || ""}" style="max-width:80px;" alt=""><br>
-    <b>Established:</b> ${dojoInfo.establishedDate || ""} <br>
-    <i>${dojoInfo.description}</i>`;
+    <b id="dojoEstablished">Established:</b> ${dojoInfo.establishedDate || ""} <br>
+    <i>${dojoInfo.description || ""}</i>`;
   // populate fields for editing
   document.getElementById('dojoName').value = dojoInfo.name || "";
   document.getElementById('dojoHeroTitle').value = dojoInfo.heroTitle || "";
@@ -209,6 +225,12 @@ function renderDojoInfo(){
   document.getElementById('dojoHeroImageUrl').value = dojoInfo.heroImageURL || "";
   document.getElementById('dojoEstablishedDate').value = dojoInfo.establishedDate || "";
   document.getElementById('dojoDescription').value = dojoInfo.description || "";
+
+  // Show/hide the established line
+  document.getElementById('dojoEstablished').style.display = dojoInfo.establishedDate ? 'inline' : 'none';
+
+   // Show/hide the delete button
+  document.getElementById('deleteDojoBtn').style.display = dojoInfo.id ? 'inline-block' : 'none';
 }
 // renderDojoInfo();
 
@@ -417,3 +439,26 @@ function renderHighlights() {
 loadHighlights();
 
 showSection('dojo');
+
+document.getElementById('deleteDojoBtn').onclick = function() {
+  if (!dojoInfo.id) {
+    alert("No dojo loaded to delete!");
+    return;
+  }
+  if (!confirm('Really delete this dojo?')) return;
+
+  fetch(`https://localhost:7286/api/Dojo/Delete/${dojoInfo.id}`, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    if (!response.ok) throw new Error("Failed to delete dojo.");
+    // Clear dojoInfo and update UI
+    dojoInfo = {};
+    renderDojoInfo();
+    alert("Dojo deleted.");
+  })
+  .catch(error => {
+    alert(error.message);
+  });
+};
+
