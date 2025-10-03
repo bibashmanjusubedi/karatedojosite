@@ -93,3 +93,18 @@ body {
     nav button { font-size: 0.9rem; }
   }
   
+
+  .modal {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .modal-content {
+    box-shadow: 0px 4px 24px rgba(0,0,0,0.26);
+  }
+  

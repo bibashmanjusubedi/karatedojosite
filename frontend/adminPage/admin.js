@@ -462,3 +462,31 @@ document.getElementById('deleteDojoBtn').onclick = function() {
   });
 };
 
+document.getElementById('viewDojoBtn').onclick = function() {
+  // Only show if dojo is loaded
+  if (!dojoInfo || !dojoInfo.name) {
+    alert("No dojo information to display!");
+    return;
+  }
+  // Build the readonly view
+  let modalBody = `
+    <h3>${dojoInfo.name || ""}</h3>
+    ${dojoInfo.heroTitle ? `<b>Hero Title:</b> ${dojoInfo.heroTitle}<br>` : ""}
+    ${dojoInfo.heroSubtitle ? `<b>Hero Subtitle:</b> ${dojoInfo.heroSubtitle}<br>` : ""}
+    ${dojoInfo.heroImageURL ? `<img src='${dojoInfo.heroImageURL}' style='max-width:140px'><br>` : ""}
+    ${dojoInfo.establishedDate ? `<b>Established:</b> ${dojoInfo.establishedDate}<br>` : ""}
+    ${dojoInfo.description ? `<b>Description:</b><br>${dojoInfo.description}` : ""}
+  `;
+  document.getElementById('dojoModalBody').innerHTML = modalBody;
+  document.getElementById('dojoModal').style.display = "flex";
+};
+
+// Modal close handler
+document.getElementById('dojoModalClose').onclick = function() {
+  document.getElementById('dojoModal').style.display = "none";
+};
+// Optional: close modal on outside click
+document.getElementById('dojoModal').onclick = function(e) {
+  if (e.target === this) this.style.display = "none";
+};
+

@@ -29,6 +29,8 @@
         <button type="submit">Save/Update Dojo Info</button>
       </form>
       <div id="dojoInfo"></div>
+      <button id="viewDojoBtn" class="view" style="margin-top: 10px;">View Dojo</button>
+
       <button id="deleteDojoBtn" class="delete" style="margin-top:15px;">Delete Dojo</button>
     </section>
 
@@ -127,6 +129,13 @@
         <tbody></tbody>
       </table>
     </section>
+  </div>
+ 
+  <div id="dojoModal" class="modal" style="display:none;">
+    <div class="modal-content" style="background:#fff; padding:20px; max-width:400px; border-radius:7px;">
+      <span id="dojoModalClose" style="float:right;cursor:pointer;">&times;</span>
+      <div id="dojoModalBody"></div>
+    </div>
   </div>
   <script src="admin.js"></script>
 </body>
