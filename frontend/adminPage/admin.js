@@ -226,7 +226,24 @@ function renderSubscribers() {
   );
 }
 function deleteSubscriber(id) {
-  subscribers = subscribers.filter(s => s.id !== id); renderSubscribers();
+  // subscribers = subscribers.filter(s => s.id !== id); renderSubscribers();
+  // Confirm before deleting (optional)
+  if(!confirm('Really delete this subscriber ?')) return;
+
+  fetch(`https://localhost:7286/api/Subscribers/Delete/${id}`,{
+    method: 'DELETE'
+  })
+  .then(response =>{
+    if(!response.ok){
+      throw new Error ("Failed to delete subscriber");
+    }
+    //Remove from local list and update table
+    subscribers = subscribers.filter(s => s.id != id);
+    renderSubscribers();
+  })
+  .catch(error =>{
+    alert(error.message);
+  });
 }
 window.deleteSubscriber = deleteSubscriber;
 // renderSubscribers();
