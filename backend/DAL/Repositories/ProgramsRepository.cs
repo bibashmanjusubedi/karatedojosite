@@ -86,7 +86,7 @@ public class ProgramsRepository
                     description = @description,
                     image_url = @image_url,
                     image=@image,
-                    pricing=@pricing,
+                    pricing=@pricing
                     WHERE id = @id";
         using var cmd = new SqliteCommand(sql, conn);
         cmd.Parameters.AddWithValue("@id", programs.Id);
