@@ -26,6 +26,8 @@ Create Table Programs (
 	image BLOB
 );
 
+ALTER Table Programs ADD COLUMN pricing TEXT;
+
 -- Team Members/ Instructors The Team Behind
 Create Table Instructor (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
