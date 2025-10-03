@@ -8,6 +8,7 @@ namespace backend.Models
         public string Description{get;set;}
         public string ImageUrl{get;set;}
         public byte[]? Image{get;set;}
+        public string Pricing {get;set;}
         
     }
 }

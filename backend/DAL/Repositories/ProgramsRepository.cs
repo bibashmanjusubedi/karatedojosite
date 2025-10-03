@@ -31,7 +31,8 @@ public class ProgramsRepository
                 Name = reader["name"].ToString(),
                 Description = reader["description"] == DBNull.Value ? null : reader["description"].ToString(),
                 ImageUrl = reader["image_url"] == DBNull.Value ? null : reader["image_url"].ToString(),
-                Image = reader["image"] == DBNull.Value ? null : (byte[])reader["image"]
+                Image = reader["image"] == DBNull.Value ? null : (byte[])reader["image"],
+                Pricing = reader["pricing"] == DBNull.Value ? null : reader["pricing"].ToString()
             };
             Programss.Add(Programs);
         }
@@ -54,7 +55,8 @@ public class ProgramsRepository
                 Name = reader["name"].ToString(),
                 Description = reader["description"] == DBNull.Value ? null : reader["description"].ToString(),
                 ImageUrl = reader["image_url"] == DBNull.Value ? null : reader["image_url"].ToString(),
-                Image = reader["image"] == DBNull.Value ? null : (byte[])reader["image"]
+                Image = reader["image"] == DBNull.Value ? null : (byte[])reader["image"],
+                Pricing = reader["pricing"] == DBNull.Value ? null : reader["pricing"].ToString()
             };
         }
         return null;
@@ -65,12 +67,13 @@ public class ProgramsRepository
     {
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
-        var sql = @"INSERT INTO Programs(name,description,image_url,image) VALUES (@name,@description,@image_url,@image)";
+        var sql = @"INSERT INTO Programs(name,description,image_url,image,pricing) VALUES (@name,@description,@image_url,@image,@pricing)";
         using var cmd = new SqliteCommand(sql, conn);
         cmd.Parameters.AddWithValue("@name", programs.Name);
         cmd.Parameters.AddWithValue("@description", programs.Description ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@image_url", programs.ImageUrl ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@image", programs.Image ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@pricing", programs.Pricing ?? (object)DBNull.Value);
         cmd.ExecuteNonQuery();
     }
 
@@ -82,7 +85,8 @@ public class ProgramsRepository
                     SET name = @name,
                     description = @description,
                     image_url = @image_url,
-                    image=@image
+                    image=@image,
+                    pricing=@pricing,
                     WHERE id = @id";
         using var cmd = new SqliteCommand(sql, conn);
         cmd.Parameters.AddWithValue("@id", programs.Id);
@@ -90,6 +94,7 @@ public class ProgramsRepository
         cmd.Parameters.AddWithValue("@description", programs.Description ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@image_url", programs.ImageUrl ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@image", programs.Image ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@pricing", programs.Pricing ?? (object)DBNull.Value);
         cmd.ExecuteNonQuery();
     }
 
