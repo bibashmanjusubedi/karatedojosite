@@ -330,12 +330,13 @@ function renderPrograms() {
       <td>${p.name}</td>
       <td>${p.description}</td>
       <td><img src="${p.imageUrl}" style="max-width:40px"></td>
-
+      <td>${p.pricing}</td>
       <td class="actions">
         <button onclick="editProgram(${p.id})">Edit</button>
         <button class="delete" onclick="deleteProgram(${p.id})">Delete</button>
+        <button onclick="viewProgram(${p.id})">View</button>
       </td>
-      <td>${p.pricing}</td>
+      
     </tr>`;
   });
 }
@@ -578,3 +579,43 @@ document.getElementById('programForm').onsubmit = function (e) {
       console.error("Error:", error);
     });
 };
+
+async function viewProgram(id) {
+  try {
+      const res = await fetch(`https://localhost:7286/api/Programs/Details/${id}`);
+      if (!res.ok) throw new Error("Cannot load program details");
+      const program = await res.json();
+
+      let imageBlock = "";
+      if (program.imageUrl && program.imageUrl !== "undefined") {
+          imageBlock += `<img src="${program.imageUrl}" style="max-width:140px"><br>`;
+      }
+      if (program.image && program.image.length > 0) {
+          const mimeType = program.imageMimeType || "image/jpeg";
+          imageBlock += `<img src="data:${mimeType};base64,${program.image}" style="max-width:140px"><br>`;
+      }
+
+      let html = `<h3>${program.name}</h3>
+          <p>${program.description || ""}</p>
+          ${imageBlock}
+          ${program.pricing ? `<b>Pricing:</b> ${program.pricing}` : ""}`;
+
+      document.getElementById('programModalBody').innerHTML = html;
+      document.getElementById('programModal').style.display = "flex";
+  } catch(err) {
+      alert("Error loading program info");
+      console.error(err);
+  }
+}
+
+// Program Modal close handler
+document.getElementById('programModalClose').onclick = function() {
+  document.getElementById('programModal').style.display = "none";
+};
+
+// Optional: close modal when clicking outside the modal content
+document.getElementById('programModal').onclick = function(e) {
+  if (e.target === this) this.style.display = "none";
+};
+
+window.viewProgram = viewProgram;
