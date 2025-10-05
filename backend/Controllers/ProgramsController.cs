@@ -33,24 +33,70 @@ namespace backend.Controllers
 
         // POST: api/Programs/Create
         [HttpPost("Create")]
-        public ActionResult Create([FromBody] Programs programs)
+        public async Task<ActionResult> Create([FromForm] ProgramsCreateUpdateDto dto)
         {
-            if (programs == null)
-                return BadRequest();
+            // if (programs == null)
+            //     return BadRequest();
+            // _programsRepository.InsertPrograms(programs);
+            // return CreatedAtAction(nameof(Details),new{id=programs.Id},programs);
+             if (dto == null) return BadRequest();
+
+            byte[] imageData = null;
+            if (dto.Image != null)
+            {
+                using var ms = new MemoryStream();
+                await dto.Image.CopyToAsync(ms);
+                imageData = ms.ToArray();
+            }
+
+            var programs = new Programs
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                ImageUrl = dto.ImageUrl,
+                Image = imageData,
+                Pricing = dto.Pricing
+            };
+
             _programsRepository.InsertPrograms(programs);
-            return CreatedAtAction(nameof(Details),new{id=programs.Id},programs);
+            return CreatedAtAction(nameof(Details), new { id = programs.Id }, programs);
+                
         }
 
          // PUT: api/Programs/Update/{id}
         [HttpPut("Update/{id}")]
-        public ActionResult Update(int id, [FromBody] Programs programs)
+        public async Task<ActionResult> Update(int id, [FromForm] ProgramsCreateUpdateDto dto)
         {
-            if(programs == null || programs.Id != id)
-                return BadRequest();
+            // if(programs == null || programs.Id != id)
+            //     return BadRequest();
 
+            // var existing = _programsRepository.GetParticularPrograms(id);
+            // if (existing == null)
+            //     return NotFound();
+            // _programsRepository.UpdatePrograms(programs);
+            // return NoContent();
+
+            if (dto == null || dto.Id != id) return BadRequest();
             var existing = _programsRepository.GetParticularPrograms(id);
-            if (existing == null)
-                return NotFound();
+            if (existing == null) return NotFound();
+
+            byte[] imageData = null;
+            if (dto.Image != null)
+            {
+                using var ms = new MemoryStream();
+                await dto.Image.CopyToAsync(ms);
+                imageData = ms.ToArray();
+            }
+
+            var programs = new Programs
+            {
+                Id = id,
+                Name = dto.Name,
+                Description = dto.Description,
+                ImageUrl = dto.ImageUrl,
+                Image = imageData,
+                Pricing = dto.Pricing
+            };
             _programsRepository.UpdatePrograms(programs);
             return NoContent();
         }

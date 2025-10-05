@@ -330,10 +330,12 @@ function renderPrograms() {
       <td>${p.name}</td>
       <td>${p.description}</td>
       <td><img src="${p.imageUrl}" style="max-width:40px"></td>
+
       <td class="actions">
         <button onclick="editProgram(${p.id})">Edit</button>
         <button class="delete" onclick="deleteProgram(${p.id})">Delete</button>
       </td>
+      <td>${p.pricing}</td>
     </tr>`;
   });
 }
@@ -504,3 +506,75 @@ document.getElementById('dojoModal').onclick = function(e) {
   if (e.target === this) this.style.display = "none";
 };
 
+
+document.getElementById('programForm').onsubmit = function (e) {
+  e.preventDefault();
+
+  const id = document.getElementById('programId').value.trim();
+  const name = document.getElementById('programName').value.trim();
+  const description = document.getElementById('programDescription').value.trim();
+  const imageUrl = document.getElementById('programImageUrl').value.trim();
+  const imageFile = document.getElementById('programImageBlob').files[0] || null;
+  const pricing = document.getElementById('programPricing').value.trim();
+
+   // Use FormData for file + text fields
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("description", description);
+  formData.append("imageUrl", imageUrl); // if your backend wants this string field
+  if (imageFile) formData.append("image", imageFile); // field name should match your API ('image')
+  formData.append("pricing", pricing);
+
+  // const payload = {
+  //   name,
+  //   description,
+  //   imageUrl,   // Make sure your backend expects this field name
+  //   // Other fields if needed
+  // };
+
+  let apiUrl, method;
+
+  if (id) {
+    // Potential update: check if program with this id exists in the list
+    const prog = programs.find(p => p.id == id);
+    if (prog) {
+      apiUrl = `https://localhost:7286/api/Programs/Update/${id}`;
+      method = 'PUT'; // Confirm with your backend if it wants PUT/POST
+      formData.append("id", id);
+    } else {
+      // If somehow an id is filled but doesn't exist in memory, treat as new
+      apiUrl = "https://localhost:7286/api/Programs/Create";
+      method = 'POST';
+    }
+  } else {
+    // No id present: always add new
+    apiUrl = "https://localhost:7286/api/Programs/Create";
+    method = 'POST';
+  }
+
+  fetch(apiUrl, {
+    method: method,
+    body:formData
+  })
+    .then(async response => {
+      if (!response.ok) throw new Error("Failed to save program info");
+        // Try to parse JSON only if there is content
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        return await response.json();
+      }
+      return null; // No JSON to parse (e.g., update returns 204 No Content)
+    })
+    .then(data => {
+      // Update programs from backend (optional: reload or merge)
+      loadPrograms(); // Should refresh the list via API
+      document.getElementById('programForm').reset();
+      document.getElementById('programCancelBtn').style.display = "none";
+      editingProgram = null;
+      alert("Program saved!");
+    })
+    .catch(error => {
+      alert("Error saving program info");
+      console.error("Error:", error);
+    });
+};
