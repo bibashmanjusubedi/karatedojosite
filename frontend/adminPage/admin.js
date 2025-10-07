@@ -378,9 +378,29 @@ function editInstructor(id) {
 document.getElementById('instructorCancelBtn').onclick = function(){
   document.getElementById('instructorForm').reset(); editingInstructor = null; this.style.display = "none";
 };
+
 function deleteInstructor(id) {
-  instructors = instructors.filter(i => i.id !== id); renderInstructors();
+  // instructors = instructors.filter(i => i.id !== id); renderInstructors();
+
+  if (!confirm('Really delete this program?')) return;
+  fetch(`https://localhost:7286/api/Instructor/Delete/${id}`,{
+    method:'DELETE'
+  })
+  .then(response => {
+    if(!response.ok){
+      throw new Error('Failed to delete instructor');
+    }
+
+    // Update the local instructurs array or state after successful deletion
+    instructors = instructors.filter(i => i.id != id);
+    renderInstructors();
+  })
+  .catch(error => {
+    console.error('Error:',error);
+    // Optionally display an error message to the user
+  })
 }
+
 window.editInstructor = editInstructor;
 window.deleteInstructor = deleteInstructor;
 function renderInstructors() {
