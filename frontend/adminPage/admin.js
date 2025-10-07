@@ -279,12 +279,13 @@ document.getElementById('programForm').onsubmit = function(e){
   let description = document.getElementById('programDescription').value.trim();
   let image_url = document.getElementById('programImageUrl').value.trim();
   let image = document.getElementById('programImageBlob').files[0] || null;
+  let pricing = document.getElementById('programPricing0').value.trim();
   if(editingProgram){
     let p = programs.find(pr => pr.id === editingProgram);
-    Object.assign(p, { name, description, image_url, image });
+    Object.assign(p, { name, description, image_url, image,pricing });
     editingProgram = null;
   } else {
-    programs.push({ id: Date.now(), name, description, image_url, image });
+    programs.push({ id: Date.now(), name, description, image_url, image,pricing });
   }
   this.reset();
   document.getElementById('programCancelBtn').style.display = "none";
@@ -296,6 +297,7 @@ function editProgram(id) {
   document.getElementById('programName').value = p.name;
   document.getElementById('programDescription').value = p.description;
   document.getElementById('programImageUrl').value = p.image_url;
+  document.getElementById('programPricing').value = p.pricing
   editingProgram = id;
   document.getElementById('programCancelBtn').style.display = "inline-block";
 }
