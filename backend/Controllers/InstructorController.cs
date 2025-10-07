@@ -33,26 +33,77 @@ namespace backend.Controllers
 
         // POST: api/Instructor/Create
         [HttpPost("Create")]
-        public ActionResult Create([FromBody] Instructor instructor)
+        public async Task<ActionResult> Create([FromForm] InstructorCreateUpdateDto dto)
         {
-            if(instructor == null)
-                return BadRequest();
+            // if(instructor == null)
+            //     return BadRequest();
+            // _instructorRepository.InsertInstructor(instructor);
+            // return CreatedAtAction(nameof(Details),new{id=instructor.Id},instructor);
+
+            if (dto == null) return BadRequest();
+
+            byte[] photoData = null;
+            if (dto.Photo != null)
+            {
+                using var ms = new MemoryStream();
+                await dto.Photo.CopyToAsync(ms);
+                photoData = ms.ToArray();
+            }
+
+            var instructor = new Instructor
+            {
+                Name = dto.Name,
+                Role = dto.Role,
+                Phone = dto.Phone,
+                Email = dto.Email,
+                PhotoUrl = dto.PhotoUrl,
+                Photo = photoData
+            };
+
             _instructorRepository.InsertInstructor(instructor);
             return CreatedAtAction(nameof(Details),new{id=instructor.Id},instructor);
+
         } 
 
         // PUT: api/Instructor/Update/{id}
         [HttpPut("Update/{id}")]
-        public ActionResult Update(int id, [FromBody] Instructor instructor)
+        public async Task <ActionResult> Update(int id, [FromForm] InstructorCreateUpdateDto dto)
         {
-            if(instructor == null || instructor.Id != id)
-                return BadRequest();
+            // if(instructor == null || instructor.Id != id)
+            //     return BadRequest();
 
+            // var existing = _instructorRepository.GetParticularInstructor(id);
+            // if (existing == null)
+            //     return NotFound();
+            // _instructorRepository.UpdateInstructor(instructor);
+            // return NoContent();
+
+            if (dto == null || dto.Id != id) return BadRequest();
             var existing = _instructorRepository.GetParticularInstructor(id);
-            if (existing == null)
-                return NotFound();
+            if (existing == null) return NotFound();
+
+            byte[] photoData = null;
+            if (dto.Photo != null)
+            {
+                using var ms = new MemoryStream();
+                await dto.Photo.CopyToAsync(ms);
+                photoData = ms.ToArray();
+            }
+
+            var instructor = new Instructor
+            {
+                Name = dto.Name,
+                Role = dto.Role,
+                Phone = dto.Phone,
+                Email = dto.Email,
+                PhotoUrl = dto.PhotoUrl,
+                Photo = photoData
+            };
+
             _instructorRepository.UpdateInstructor(instructor);
             return NoContent();
+
+
         }
 
         // DELETE: api/Instructor/Delete/{id}
