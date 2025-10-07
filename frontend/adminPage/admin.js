@@ -279,7 +279,7 @@ document.getElementById('programForm').onsubmit = function(e){
   let description = document.getElementById('programDescription').value.trim();
   let image_url = document.getElementById('programImageUrl').value.trim();
   let image = document.getElementById('programImageBlob').files[0] || null;
-  let pricing = document.getElementById('programPricing0').value.trim();
+  let pricing = document.getElementById('programPricing').value.trim();
   if(editingProgram){
     let p = programs.find(pr => pr.id === editingProgram);
     Object.assign(p, { name, description, image_url, image,pricing });
@@ -297,7 +297,7 @@ function editProgram(id) {
   document.getElementById('programName').value = p.name;
   document.getElementById('programDescription').value = p.description;
   document.getElementById('programImageUrl').value = p.image_url;
-  document.getElementById('programPricing').value = p.pricing
+  document.getElementById('programPricing').value = p.pricing;
   editingProgram = id;
   document.getElementById('programCancelBtn').style.display = "inline-block";
 }
@@ -346,26 +346,44 @@ function renderPrograms() {
 loadPrograms();
 
 // Instructors CRUD (similar pattern)
+// let editingInstructor = null;
+// document.getElementById('instructorForm').onsubmit = function(e){
+//   e.preventDefault();
+//   let name = document.getElementById('instructorName').value.trim();
+//   let role = document.getElementById('instructorRole').value.trim();
+//   let phone = document.getElementById('instructorPhone').value.trim();
+//   let email = document.getElementById('instructorEmail').value.trim();
+//   let photo_url = document.getElementById('instructorPhotoUrl').value.trim();
+//   let photo = document.getElementById('instructorPhotoBlob').files[0] || null;
+//   if(editingInstructor){
+//     let ins = instructors.find(i => i.id === editingInstructor);
+//     Object.assign(ins, { name, role, phone, email, photo_url, photo });
+//     editingInstructor = null;
+//   } else {
+//     instructors.push({ id:Date.now(), name, role, phone, email, photo_url, photo });
+//   }
+//   this.reset();
+//   document.getElementById('instructorCancelBtn').style.display = "none";
+//   renderInstructors();
+// };
+// function editInstructor(id) {
+//   let i = instructors.find(x => x.id === id);
+//   document.getElementById('instructorId').value = i.id;
+//   document.getElementById('instructorName').value = i.name;
+//   document.getElementById('instructorRole').value = i.role;
+//   document.getElementById('instructorPhone').value = i.phone;
+//   document.getElementById('instructorEmail').value = i.email;
+//   document.getElementById('instructorPhotoUrl').value = i.photo_url;
+//   editingInstructor = id;
+//   document.getElementById('instructorCancelBtn').style.display = "inline-block";
+// }
+// document.getElementById('instructorCancelBtn').onclick = function(){
+//   document.getElementById('instructorForm').reset(); editingInstructor = null; this.style.display = "none";
+// };
+
+// Instructors CRUD (API-based like programs)
 let editingInstructor = null;
-document.getElementById('instructorForm').onsubmit = function(e){
-  e.preventDefault();
-  let name = document.getElementById('instructorName').value.trim();
-  let role = document.getElementById('instructorRole').value.trim();
-  let phone = document.getElementById('instructorPhone').value.trim();
-  let email = document.getElementById('instructorEmail').value.trim();
-  let photo_url = document.getElementById('instructorPhotoUrl').value.trim();
-  let photo = document.getElementById('instructorPhotoBlob').files[0] || null;
-  if(editingInstructor){
-    let ins = instructors.find(i => i.id === editingInstructor);
-    Object.assign(ins, { name, role, phone, email, photo_url, photo });
-    editingInstructor = null;
-  } else {
-    instructors.push({ id:Date.now(), name, role, phone, email, photo_url, photo });
-  }
-  this.reset();
-  document.getElementById('instructorCancelBtn').style.display = "none";
-  renderInstructors();
-};
+
 function editInstructor(id) {
   let i = instructors.find(x => x.id === id);
   document.getElementById('instructorId').value = i.id;
@@ -373,12 +391,15 @@ function editInstructor(id) {
   document.getElementById('instructorRole').value = i.role;
   document.getElementById('instructorPhone').value = i.phone;
   document.getElementById('instructorEmail').value = i.email;
-  document.getElementById('instructorPhotoUrl').value = i.photo_url;
+  document.getElementById('instructorPhotoUrl').value = i.photoUrl || i.photo_url || ""; // Handle both field names
   editingInstructor = id;
   document.getElementById('instructorCancelBtn').style.display = "inline-block";
 }
+
 document.getElementById('instructorCancelBtn').onclick = function(){
-  document.getElementById('instructorForm').reset(); editingInstructor = null; this.style.display = "none";
+  document.getElementById('instructorForm').reset(); 
+  editingInstructor = null; 
+  this.style.display = "none";
 };
 
 function deleteInstructor(id) {

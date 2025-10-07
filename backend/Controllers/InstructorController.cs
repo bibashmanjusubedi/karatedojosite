@@ -92,6 +92,7 @@ namespace backend.Controllers
 
             var instructor = new Instructor
             {
+                Id = id,
                 Name = dto.Name,
                 Role = dto.Role,
                 Phone = dto.Phone,
