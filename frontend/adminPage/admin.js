@@ -415,6 +415,7 @@ function renderInstructors() {
       <td>${i.phone}</td>
       <td><img src="${i.photo_url}" style="max-width:40px"></td>
       <td class="actions">
+        <button onclick="viewInstructor(${i.id})">View</button>
         <button onclick="editInstructor(${i.id})">Edit</button>
         <button class="delete" onclick="deleteInstructor(${i.id})">Delete</button>
       </td>
@@ -628,6 +629,102 @@ async function viewProgram(id) {
   }
 }
 
+async function viewInstructor(id) {
+  try {
+    const res = await fetch(`https://localhost:7286/api/Instructor/Details/${id}`);
+    if (!res.ok) throw new Error("Cannot load instructor details");
+    const instructor = await res.json();
+
+    let imageBlock = "";
+    if (instructor.photo_url && instructor.photo_url !== "undefined") {
+      imageBlock += `<img src="${instructor.photo_url}" style="max-width:140px"><br>`;
+    }
+    if (instructor.photo && instructor.photo.length > 0) {
+      const mimeType = instructor.photoMimeType || "image/jpeg";
+      imageBlock += `<img src="data:${mimeType};base64,${instructor.photo}" style="max-width:140px"><br>`;
+    }
+
+    let html = `<h3>${instructor.name}</h3>
+      <b>Role:</b> ${instructor.role}<br>
+      <b>Email:</b> ${instructor.email}<br>
+      <b>Phone:</b> ${instructor.phone}<br>
+      ${imageBlock}`;
+
+    document.getElementById('instructorModalBody').innerHTML = html;
+    document.getElementById('instructorModal').style.display = "flex";
+  } catch (err) {
+    alert("Error loading instructor info");
+    console.error(err);
+  }
+}
+window.viewInstructor = viewInstructor;
+
+
+document.getElementById('instructorForm').onsubmit = function(e){
+  e.preventDefault();
+
+  const id = document.getElementById('instructorId').value.trim();
+  const name = document.getElementById('instructorName').value.trim();
+  const role = document.getElementById('instructorRole').value.trim();
+  const phone = document.getElementById('instructorPhone').value.trim();
+  const email = document.getElementById('instructorEmail').value.trim();
+  const photoUrl = document.getElementById('instructorPhotoUrl').value.trim();
+  const photoFile = document.getElementById('instructorPhotoBlob').files[0] || null;
+
+  // Use FormData for file + text fields
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("role", role);
+  formData.append("phone", phone);
+  formData.append("email", email);
+  formData.append("photoUrl", photoUrl);
+  if (photoFile) formData.append("photo", photoFile);
+
+  let apiUrl, method;
+
+  if (id) {
+    // Check if instructor exists in local array
+    const ins = instructors.find(i => i.id == id);
+    if (ins) {
+      apiUrl = `https://localhost:7286/api/Instructor/Update/${id}`;
+      method = 'PUT';
+      formData.append("id", id);
+    } else {
+      apiUrl = "https://localhost:7286/api/Instructor/Create";
+      method = 'POST';
+    }
+  } else {
+    apiUrl = "https://localhost:7286/api/Instructor/Create";
+    method = 'POST';
+  }
+
+  fetch(apiUrl, {
+    method: method,
+    body: formData
+  })
+    .then(async response => {
+      if (!response.ok) throw new Error("Failed to save instructor info");
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        return await response.json();
+      }
+      return null;
+    })
+    .then(data => {
+      loadInstructors(); // Refresh list from backend
+      document.getElementById('instructorForm').reset();
+      document.getElementById('instructorCancelBtn').style.display = "none";
+      editingInstructor = null;
+      alert("Instructor saved!");
+    })
+    .catch(error => {
+      alert("Error saving instructor info");
+      console.error("Error:", error);
+    });
+};
+
+
+
 // Program Modal close handler
 document.getElementById('programModalClose').onclick = function() {
   document.getElementById('programModal').style.display = "none";
@@ -639,3 +736,15 @@ document.getElementById('programModal').onclick = function(e) {
 };
 
 window.viewProgram = viewProgram;
+
+
+document.getElementById('instructorModalClose').onclick = function() {
+  document.getElementById('instructorModal').style.display = "none";
+};
+document.getElementById('instructorModal').onclick = function(e) {
+  if (e.target === this) this.style.display = "none";
+};
+
+
+
+
