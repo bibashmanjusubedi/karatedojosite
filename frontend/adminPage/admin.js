@@ -476,9 +476,27 @@ function editHighlight(id) {
 document.getElementById('highlightCancelBtn').onclick = function(){
   document.getElementById('highlightForm').reset(); editingHighlight = null; this.style.display = "none";
 };
+
 function deleteHighlight(id) {
-  highlights = highlights.filter(h => h.id !== id); renderHighlights();
+  if (!confirm('Really delete this highlight?')) return;
+  fetch(`https://localhost:7286/api/Highlights/Delete/${id}`, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to delete highlight');
+    }
+    // Remove the highlight locally if deletion was successful
+    highlights = highlights.filter(h => h.id !== id);
+    renderHighlights();
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    // Optionally show an error message to the user here
+  });
 }
+
+
 window.editHighlight = editHighlight;
 window.deleteHighlight = deleteHighlight;
 function renderHighlights() {
