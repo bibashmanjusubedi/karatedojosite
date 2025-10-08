@@ -450,21 +450,75 @@ loadInstructors();
 
 // Highlights CRUD
 let editingHighlight = null;
+// document.getElementById('highlightForm').onsubmit = function(e){
+//   e.preventDefault();
+//   let title = document.getElementById('highlightTitle').value.trim();
+//   let content = document.getElementById('highlightContent').value.trim();
+//   if(editingHighlight){
+//     let h = highlights.find(hh => hh.id === editingHighlight);
+//     Object.assign(h, { title, content });
+//     editingHighlight = null;
+//   } else {
+//     highlights.push({ id:Date.now(), title, content });
+//   }
+//   this.reset();
+//   document.getElementById('highlightCancelBtn').style.display = "none";
+//   renderHighlights();
+// };
+
 document.getElementById('highlightForm').onsubmit = function(e){
   e.preventDefault();
-  let title = document.getElementById('highlightTitle').value.trim();
-  let content = document.getElementById('highlightContent').value.trim();
-  if(editingHighlight){
-    let h = highlights.find(hh => hh.id === editingHighlight);
-    Object.assign(h, { title, content });
-    editingHighlight = null;
+  
+  const id = document.getElementById('highlightId').value.trim();
+  const title = document.getElementById('highlightTitle').value.trim();
+  const content = document.getElementById('highlightContent').value.trim();
+
+  // Prepare the payload
+  const payload = {title,content}
+  let apiUrl,method;
+
+  // Check for existence in local highlights array
+  if(id){
+    const exists = highlights.some(h => String(h.id) === id);
+    if (exists){
+      apiUrl = `https://localhost:7286/api/Highlights/Update/${id}`;
+      method = 'PUT';
+      payload.id = id; // Add id for backend if required
+    } else {
+      apiUrl = 'https://localhost:7286/api/Highlights/Create';
+      method = 'POST';
+    }
   } else {
-    highlights.push({ id:Date.now(), title, content });
+    apiUrl = 'https://localhost:7286/api/Highlights/Create';
+    method = 'POST';
   }
-  this.reset();
-  document.getElementById('highlightCancelBtn').style.display = "none";
-  renderHighlights();
-};
+
+  fetch(apiUrl,{
+    method: method,
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(payload)
+  })
+    .then(async response => {
+      if(!response.ok) throw new Error("Failed to save highlight");
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1){
+        return await response.json();
+      }
+      return null;
+    })
+    .then(data => {
+      loadHighlights(); // Refresh from backend
+      document.getElementById('highlightForm').reset();
+      document.getElementById('highlightCancelBtn').style.display = "none";
+      editingHighlight = null;
+      alert("Highlight saved!");
+    })
+    .catch(error => {
+      alert("Error saving highlight info");
+      console.error("Error:", error);
+    });
+}
+
 function editHighlight(id) {
   let h = highlights.find(x => x.id === id);
   document.getElementById('highlightId').value = h.id;
