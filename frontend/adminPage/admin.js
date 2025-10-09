@@ -155,7 +155,10 @@ document.getElementById('dojoForm').onsubmit = function(e){
   })
   .then(response => {
     if(!response.ok) throw new Error("Failed to save dojo info");
-    return response.json();
+    // If the response has content, parse JSON; else, return empty object
+    return response.headers.get("content-length") > 0 
+      ? response.json() : {};
+    // return response.json();
   })
   .then(data => {
     dojoInfo = data;
