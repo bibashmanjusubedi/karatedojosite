@@ -803,8 +803,10 @@ document.getElementById('instructorForm').onsubmit = function(e){
     .then(async response => {
       if (!response.ok) throw new Error("Failed to save instructor info");
       const contentType = response.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        return await response.json();
+      const text  =await response.text();
+      if ((contentType && contentType.indexOf("application/json") !== -1)&& text) {
+        // return await response.json();
+        return JSON.parse(text);
       }
       return null;
     })
