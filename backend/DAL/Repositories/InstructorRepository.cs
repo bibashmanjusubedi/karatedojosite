@@ -94,8 +94,8 @@ public class InstructorRepository
         cmd.Parameters.AddWithValue("@id", instructor.Id);
         cmd.Parameters.AddWithValue("@name", instructor.Name);
         cmd.Parameters.AddWithValue("@role", instructor.Role);
-        cmd.Parameters.AddWithValue("phone", instructor.Phone ?? (object)DBNull.Value);
-        cmd.Parameters.AddWithValue("email", instructor.Email ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@phone", instructor.Phone ?? (object)DBNull.Value);  // Fixed: Added @
+        cmd.Parameters.AddWithValue("@email", instructor.Email ?? (object)DBNull.Value);  // Fixed: Added @
         cmd.Parameters.AddWithValue("@photo_url", instructor.PhotoUrl ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@photo", instructor.Photo ?? (object)DBNull.Value);
         cmd.ExecuteNonQuery();

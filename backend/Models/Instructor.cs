@@ -9,6 +9,7 @@ namespace backend.Models
         public string Phone {get;set;}
         public string Email {get;set; }
         public string PhotoUrl {get;set;}
+        // TODO: should this be byte[] ? It is better to have a string path url
         public byte[]? Photo {get;set;}
 
     }
