@@ -9,7 +9,13 @@ namespace backend.Controllers
     [Route("api/[controller]")]
     public class DojoController : ControllerBase
     {
-        private readonly DojoRepository _dojoRepository = new DojoRepository();
+        private readonly IDojoRepository _dojoRepository;
+
+        // Dependency Injection: repository is injected via constructor
+        public DojoController(IDojoRepository dojoRepository)
+        {
+            _dojoRepository = dojoRepository ?? throw new ArgumentNullException(nameof(dojoRepository));
+        }
 
         // GET: api/Dojo or api/Dojo/Index
         [HttpGet]

@@ -5,12 +5,15 @@ using backend.Models;
 using Microsoft.Data.Sqlite;
 using backend.DAL;
 namespace backend.DAL.Repositories;
-public class DojoRepository
+
+public class DojoRepository : IDojoRepository
 {
     private readonly string _connectionString;
-    public DojoRepository()
+
+    // Dependency Injection: connection string is injected
+    public DojoRepository(string connectionString)
     {
-        _connectionString = DatabaseHelper.ConnectionString;
+        _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
     }
 
     public IEnumerable<Dojo> GetAllDojos()
@@ -39,7 +42,7 @@ public class DojoRepository
         return Dojos;
     }
 
-    public Dojo GetParticularDojo(int id)
+    public Dojo? GetParticularDojo(int id)
     {
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
@@ -69,6 +72,8 @@ public class DojoRepository
         using var conn = new SqliteConnection(_connectionString);
         conn.Open();
         var sql = @"INSERT INTO Dojo (name,hero_title,hero_subtitle,hero_image_url,established_date,description) VALUEs (@name,@hero_title,@hero_subtitle,@hero_image_url,@established_date,@description)";
+        // TODO: this might not be idiomatic. I think this can be made succinct.
+        // dictionary iteration might be good.
         using var cmd = new SqliteCommand(sql, conn);
         cmd.Parameters.AddWithValue("@name", dojo.Name ?? (object)DBNull.Value);
         cmd.Parameters.AddWithValue("@hero_title", dojo.HeroTitle ?? (object)DBNull.Value);
