@@ -1,110 +1,441 @@
-body {
-    background: #f6f6f9;
-    font-family: sans-serif;
-  }
-  
-  .container {
-    width: 95%;
-    max-width: 900px;
-    margin: 2rem auto;
-    background: #fff;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 20px rgba(9,30,66,0.10);
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  nav {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-bottom: 2rem;
-  }
-  
-  nav button {
-    padding: 0.5rem 1.2rem;
-    border: none;
-    border-radius: 5px;
-    background: #1976d2;
-    color: #fff;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .admin-section {
-    margin-bottom: 2rem;
-  }
-  
-  form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin: 1rem 0;
-  }
-  
-  form input, form textarea, form button {
-    font-size: 1rem;
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  form textarea { min-width: 220px; min-height: 60px; }
-  
-  form button {
-    background: #3884c2;
-    color: #fff;
-    border: none;
-    padding: 0.55rem 1.1rem;
-    font-weight: bold;
-  }
-  
-  table {
-    width: 100%;
-    margin-bottom: 1rem;
-    border-collapse: collapse;
-  }
-  
-  table thead {
-    background: #1976d2;
-    color: #fff;
-  }
-  
-  table th, table td {
-    padding: 0.55rem;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .actions button {
-    margin-right: 0.4rem;
-    background: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    padding: 0.3rem 0.8rem;
-  }
-  .actions .delete { background: #e53935; }
-  
-  @media (max-width: 700px) {
-    .container { padding: 0.7rem; }
-    nav button { font-size: 0.9rem; }
-  }
-  
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  .modal {
-    position: fixed;
-    left: 0; top: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
+body {
+  background: #f4f4f4;
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #35424a;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+h2 {
+  color: #35424a;
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid #e8491d;
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+nav button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  background: #35424a;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+nav button:hover {
+  background: #e8491d;
+  transform: translateY(-2px);
+}
+
+nav button:active {
+  transform: translateY(0);
+}
+
+/* Sections */
+.admin-section {
+  margin-bottom: 3rem;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  .modal-content {
-    box-shadow: 0px 4px 24px rgba(0,0,0,0.26);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+/* Forms */
+form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: #f7fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+form input,
+form textarea {
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+form input:focus,
+form textarea:focus {
+  outline: none;
+  border-color: #e8491d;
+  box-shadow: 0 0 0 3px rgba(232, 73, 29, 0.1);
+}
+
+form textarea {
+  min-height: 100px;
+  resize: vertical;
+  grid-column: 1 / -1;
+}
+
+form input[type="file"] {
+  padding: 0.5rem;
+  border: 2px dashed #cbd5e0;
+  background: #fff;
+  cursor: pointer;
+}
+
+form input[type="file"]:hover {
+  border-color: #e8491d;
+  background: #f7fafc;
+}
+
+form button {
+  background: #e8491d;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+form button:hover {
+  background: #d13e17;
+  transform: translateY(-2px);
+}
+
+form button[type="button"] {
+  background: #35424a;
+}
+
+form button[type="button"]:hover {
+  background: #2a353c;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+table thead {
+  background: #35424a;
+  color: #fff;
+}
+
+table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: #fff;
+  color: #4a5568;
+}
+
+table tbody tr:hover {
+  background: #f7fafc;
+}
+
+table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+table img {
+  max-width: 60px;
+  max-height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.actions button:not(.delete) {
+  background: #35424a;
+  color: #fff;
+}
+
+.actions button:not(.delete):hover {
+  background: #2a353c;
+  transform: translateY(-2px);
+}
+
+.actions .delete,
+button.delete {
+  background: #e8491d;
+  color: #fff;
+}
+
+.actions .delete:hover,
+button.delete:hover {
+  background: #d13e17;
+  transform: translateY(-2px);
+}
+
+button.view,
+button.delete {
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  display: inline-block;
+}
+
+button.view {
+  background: #35424a;
+}
+
+button.view:hover {
+  background: #e8491d;
+  transform: translateY(-2px);
+}
+
+button.delete {
+  background: #e8491d;
+  margin-left: 0.5rem;
+}
+
+button.delete:hover {
+  background: #d13e17;
+  transform: translateY(-2px);
+}
+
+/* Info Display */
+#dojoInfo {
+  background: #f7fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  border-left: 4px solid #e8491d;
+}
+
+#dojoInfo p {
+  margin: 0.5rem 0;
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+#dojoInfo strong {
+  color: #35424a;
+  display: inline-block;
+  min-width: 150px;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content span {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #718096;
+  transition: all 0.3s ease;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f7fafc;
+}
+
+.modal-content span:hover {
+  color: #fff;
+  background: #e8491d;
+}
+
+#dojoModalBody,
+#programModalBody,
+#instructorModalBody {
+  margin-top: 1rem;
+}
+
+#dojoModalBody p,
+#programModalBody p,
+#instructorModalBody p {
+  margin: 0.75rem 0;
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+#dojoModalBody strong,
+#programModalBody strong,
+#instructorModalBody strong {
+  color: #35424a;
+  display: inline-block;
+  min-width: 120px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  .container {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  nav {
+    gap: 0.5rem;
+  }
+
+  nav button {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  form {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  table {
+    font-size: 0.85rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #35424a;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e8491d;
+}
   
