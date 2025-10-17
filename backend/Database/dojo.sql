@@ -45,3 +45,10 @@ Create Table HighLights(
 	title TEXT NOT NULL,
 	content TEXT
 );
+
+-- Exisiting table unchanged --
+Create Table Admin (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	username TEXT not null,
+	password_hash TEXT not null
+)

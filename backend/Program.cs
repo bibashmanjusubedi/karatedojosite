@@ -11,6 +11,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddScoped<IDojoRepository>(provider =>
     new DojoRepository(connectionString));
 
+builder.Services.AddScoped<AdminRepository>(provider =>
+    new AdminRepository(connectionString));
+
+
 builder.Services.AddControllers(); 
 
 builder.Services.AddCors(options =>
