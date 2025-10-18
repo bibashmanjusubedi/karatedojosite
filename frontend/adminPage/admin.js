@@ -851,3 +851,37 @@ function showSection(sectionId) {
   });
   document.getElementById(sectionId).style.display = 'block';
 }
+
+
+let admins = [];
+
+function loadAdmins(){
+  fetch("https://localhost:7286/api/admin")
+    .then(response => response.json())
+    .then(data =>{
+      admins = Array.isArray(data) ? data : [];
+      renderAdmins();
+    })
+    .catch(error =>{
+      console.error("Error fetching admins:",error);
+    });
+}
+
+function renderAdmins(){
+  let tbody = document.querySelector('#adminsTable tbody');
+  tbody.innerHTML = "";
+  admins.forEach(a => {
+    tbody.innerHTML += `<tr>
+    <td>${a.id}</td>
+    <td>${a.username}</td>
+    <td class="actions">
+      <button onclickc="viewAdmin(${a.id})">View</button>
+      <button onclick="editAdmin(${a.id})">Edit</button>
+      <button class="delete" onclick="deleteAdmin(${a.id})">Delete</button>
+    </td>
+  </tr>`;  
+  });
+}
+
+loadAdmins();
+
