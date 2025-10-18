@@ -883,6 +883,30 @@ function renderAdmins(){
   });
 }
 
+window.deleteAdmin = function(id) {
+  if (!confirm("Really delete this admin?")) return;
+  fetch(`https://localhost:7286/api/admin/delete/${id}`, {
+    method: 'DELETE'
+  })
+  .then(async response => {
+    if (!response.ok) {
+      // Try to give user feedback.
+      let err = await response.json().catch(() => ({}));
+      alert("Failed to delete admin: " + (err.message || response.statusText));
+      return;
+    }
+    // Remove from local array and re-render
+    admins = admins.filter(a => a.id !== id);
+    renderAdmins();
+    showSection('admin'); 
+    alert('Admin deleted!');
+  })
+  .catch(error => {
+    alert("Error: " + error.message);
+  });
+};
+
+
 window.viewAdmin = function(id) {
   const admin = admins.find(a => a.id === id);
   // You can add other admin details if you have them
@@ -1012,7 +1036,7 @@ document.getElementById('adminForm').onsubmit = async function (e) {
     if (res.ok) {
       await loadAdmins();
       setAdminFormMode("edit", admins[0]);
-      showSection('admin'); // <-- keep on admin section
+      showSection('admins'); // <-- keep on admin section
       alert("Admin registered!");
     } else {
       let err = await res.json().catch(() => ({}));
