@@ -139,12 +139,21 @@
   <section id="admins" class="admin-section" style="display:none;">
     <h2>Admins</h2>
     <form id="adminForm">
-      <input type="hidden" id="adminId">
-      <input type="text" id="adminUsername" placeholder="Username" required>
-      <input type="password" id="adminPassword" placeholder="Password">
-      <button type="submit">Add/Update Admin</button>
+      <input type="text" id="adminUsername" placeholder="Username" required />
+    
+      <!-- Only shown when registering (creating first admin) -->
+      <input type="password" id="adminCreatePassword" placeholder="Password" style="display:block;" />
+    
+      <!-- Only shown when updating -->
+      <input type="password" id="adminCurrentPassword" placeholder="Current Password" style="display:none;" />
+      <input type="password" id="adminNewPassword" placeholder="New Password" style="display:none;" />
+    
+      <button type="submit">Save/Update Admin</button>
       <button type="button" id="adminCancelBtn" style="display:none;">Cancel</button>
     </form>
+    
+    
+    
     <table id="adminsTable">
       <thead>
         <tr>
@@ -180,13 +189,20 @@
       </div>
     </div>
 
-    <div id="adminModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; align-items:center; justify-content:center; background:rgba(0,0,0,0.4); z-index:1000;">
+    <!-- <div id="adminModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; align-items:center; justify-content:center; background:rgba(0,0,0,0.4); z-index:1000;">
       <div class="modal-content" style="background:#fff; padding:20px; max-width:400px; border-radius:7px; position:relative;">
         <span id="adminModalClose" style="position:absolute; top:8px; right:8px; cursor:pointer; font-size:24px;">&times;</span>
         <div id="adminModalBody"></div>
       </div>
+    </div> -->
+    <!-- Admin View Modal -->
+  <div id="adminViewModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+    <div style="background:#fff; padding:1em 2em; border-radius:8px; min-width:220px; max-width:90vw; margin:auto;">
+      <span id="adminViewModalClose" style="float:right; cursor:pointer;">&times;</span>
+      <div id="adminViewModalBody"></div>
     </div>
-    
+  </div>
+
     
   <script src="admin.js"></script>
 </body>

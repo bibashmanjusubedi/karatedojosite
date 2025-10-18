@@ -875,7 +875,7 @@ function renderAdmins(){
     <td>${a.id}</td>
     <td>${a.username}</td>
     <td class="actions">
-      <button onclickc="viewAdmin(${a.id})">View</button>
+      <button onclick="viewAdmin(${a.id})">View</button>
       <button onclick="editAdmin(${a.id})">Edit</button>
       <button class="delete" onclick="deleteAdmin(${a.id})">Delete</button>
     </td>
@@ -883,5 +883,214 @@ function renderAdmins(){
   });
 }
 
+window.viewAdmin = function(id) {
+  const admin = admins.find(a => a.id === id);
+  // You can add other admin details if you have them
+  const modalBodyHtml = `
+    <h3>Admin Info</h3>
+    <b>ID:</b> ${admin.id}<br>
+    <b>Username:</b> ${admin.username}
+  `;
+  document.getElementById('adminViewModalBody').innerHTML = modalBodyHtml;
+  document.getElementById('adminViewModal').style.display = "flex";
+};
+
+// Modal close functionality
+document.getElementById('adminViewModalClose').onclick = function() {
+  document.getElementById('adminViewModal').style.display = "none";
+};
+document.getElementById('adminViewModal').onclick = function(e) {
+  if (e.target === this) this.style.display = "none";
+};
+
+
+window.editAdmin = function(id) {
+  // Find the admin in the admins array
+  const admin = admins.find(a => a.id === id);
+  setAdminFormMode("edit", admin);
+};
+
 loadAdmins();
 
+
+// document.getElementById('adminForm').onsubmit = function (e) {
+//   e.preventDefault();
+
+//   const username = document.getElementById('adminUsername').value.trim();
+//   const password = document.getElementById('adminPassword').value.trim();
+
+//   // If there is already at least one admin, update.
+//   if (admins.length > 0) {
+//     // For update, you’ll want to get "currentUsername" and "currentPassword"
+//     // For demo, assume updating the first (or only) admin
+//     const current = admins[0];
+
+//     // >>> GET TOKEN BEFORE FETCH <<<
+//     const token = localStorage.getItem("jwtToken"); // Or sessionStorage, as appropriate
+
+//     const body = {
+//       currentUsername: current.username,
+//       currentPassword: password,      // ask for current password in form; or you could require user to enter it
+//       newUsername: username,          // new username from form
+//       newPassword: password           // new password from form (can adjust as needed)
+//     };
+
+//     fetch("https://localhost:7286/api/admin/update", {
+//       method: "PUT",
+//       headers: {
+//         "Content-Type": "application/json",
+//         "Authorization": "Bearer "+ token // token is what you receive at login
+//       },
+//       body: JSON.stringify(body)
+//     })
+//     .then(async response => {
+//       if (!response.ok) throw new Error("Failed to update admin");
+//       const contentType = response.headers.get("content-type");
+//       if (contentType && contentType.indexOf("application/json") !== -1) {
+//         return await response.json();
+//       }
+//       return null;
+//     })
+//     .then(data => {
+//       loadAdmins();
+//       document.getElementById('adminForm').reset();
+//       document.getElementById('adminCancelBtn').style.display = "none";
+//       alert("Admin updated!");
+//     })
+//     .catch(error => {
+//       alert("Error updating admin");
+//       console.error("Error:", error);
+//     });
+
+//   } else {
+//     // Register new admin
+//     const payload = {
+//       username: username,
+//       password: password
+//     };
+
+//     fetch("https://localhost:7286/api/admin/register", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(payload)
+//     })
+//     .then(async response => {
+//       if (!response.ok) throw new Error("Failed to register admin");
+//       const contentType = response.headers.get("content-type");
+//       if (contentType && contentType.indexOf("application/json") !== -1) {
+//         return await response.json();
+//       }
+//       return null;
+//     })
+//     .then(data => {
+//       loadAdmins();
+//       document.getElementById('adminForm').reset();
+//       document.getElementById('adminCancelBtn').style.display = "none";
+//       alert("Admin registered!");
+//     })
+//     .catch(error => {
+//       alert("Error registering admin");
+//       console.error("Error:", error);
+//     });
+//   }
+// };
+
+
+document.getElementById('adminForm').onsubmit = async function (e) {
+  e.preventDefault();
+  const username = document.getElementById('adminUsername').value.trim();
+
+  if (admins.length === 0) {
+    // Register new admin (use the create password field)
+    const password = document.getElementById('adminCreatePassword').value.trim();
+    let res = await fetch("https://localhost:7286/api/admin/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    if (res.ok) {
+      await loadAdmins();
+      setAdminFormMode("edit", admins[0]);
+      showSection('admin'); // <-- keep on admin section
+      alert("Admin registered!");
+    } else {
+      let err = await res.json().catch(() => ({}));
+      alert("Error registering admin: " + (err.message || res.statusText));
+    }
+  } else {
+    // Update admin
+    const currentPassword = document.getElementById('adminCurrentPassword').value.trim();
+    const newPassword = document.getElementById('adminNewPassword').value.trim();
+    const token = localStorage.getItem("jwtToken");
+    const current = admins[0];
+
+    const body = {
+      currentUsername: current.username,
+      currentPassword: currentPassword,
+      newUsername: username,
+      newPassword: newPassword
+    };
+
+    let res = await fetch("https://localhost:7286/api/admin/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (res.ok) {
+      await loadAdmins();
+      setAdminFormMode("edit", admins[0]);
+      showSection('admin'); // <-- keep on admin section
+      alert("Admin updated!");
+    } else {
+      let err = await res.json().catch(() => ({}));
+      alert("Error updating admin: " + (err.message || res.statusText));
+    }
+  }
+};
+
+
+
+function setAdminFormMode(mode, admin = null) {
+  if (mode === "edit") {
+    document.getElementById('adminCreatePassword').style.display = "none";
+    document.getElementById('adminCurrentPassword').style.display = "block";
+    document.getElementById('adminNewPassword').style.display = "block";
+    document.getElementById('adminCancelBtn').style.display = "inline";
+    document.getElementById('adminUsername').value = admin ? admin.username : "";
+    document.getElementById('adminCurrentPassword').value = "";
+    document.getElementById('adminNewPassword').value = "";
+  }
+  if (mode === "create") {
+    document.getElementById('adminCreatePassword').style.display = "block";
+    document.getElementById('adminCurrentPassword').style.display = "none";
+    document.getElementById('adminNewPassword').style.display = "none";
+    document.getElementById('adminCancelBtn').style.display = "none";
+    document.getElementById('adminUsername').value = "";
+    document.getElementById('adminCreatePassword').value = "";
+  }
+}
+
+function afterLoadAdmins() {
+  if (admins.length > 0) {
+    setAdminFormMode("edit", admins[0]);
+  } else {
+    setAdminFormMode("create");
+  }
+}
+
+async function loadAdmins() {
+  const response = await fetch("https://localhost:7286/api/admin");
+  const data = await response.json(); // parse once!
+  admins = Array.isArray(data) ? data : [];
+  renderAdmins();
+  afterLoadAdmins();
+}
+
+document.getElementById('adminCancelBtn').onclick = function() {
+  afterLoadAdmins();
+};
