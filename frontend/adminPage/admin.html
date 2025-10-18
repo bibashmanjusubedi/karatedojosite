@@ -14,6 +14,7 @@
       <button onclick="showSection('programs')">Programs</button>
       <button onclick="showSection('instructors')">Instructors</button>
       <button onclick="showSection('highlights')">Highlights</button>
+      <button onclick="showSection('admins')">Admins</button>
     </nav>
     
     <!-- Dojo Info Section -->
@@ -133,6 +134,29 @@
       </table>
     </section>
   </div>
+
+  <!-- Admins Section -->
+  <section id="admins" class="admin-section" style="display:none;">
+    <h2>Admins</h2>
+    <form id="adminForm">
+      <input type="hidden" id="adminId">
+      <input type="text" id="adminUsername" placeholder="Username" required>
+      <input type="password" id="adminPassword" placeholder="Password">
+      <button type="submit">Add/Update Admin</button>
+      <button type="button" id="adminCancelBtn" style="display:none;">Cancel</button>
+    </form>
+    <table id="adminsTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
  
   <div id="dojoModal" class="modal" style="display:none;">
     <div class="modal-content" style="background:#fff; padding:20px; max-width:400px; border-radius:7px;">
@@ -155,6 +179,14 @@
         <div id="instructorModalBody"></div>
       </div>
     </div>
+
+    <div id="adminModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; align-items:center; justify-content:center; background:rgba(0,0,0,0.4); z-index:1000;">
+      <div class="modal-content" style="background:#fff; padding:20px; max-width:400px; border-radius:7px; position:relative;">
+        <span id="adminModalClose" style="position:absolute; top:8px; right:8px; cursor:pointer; font-size:24px;">&times;</span>
+        <div id="adminModalBody"></div>
+      </div>
+    </div>
+    
     
   <script src="admin.js"></script>
 </body>

@@ -845,6 +845,9 @@ document.getElementById('instructorModal').onclick = function(e) {
   if (e.target === this) this.style.display = "none";
 };
 
-
-
-
+function showSection(sectionId) {
+  document.querySelectorAll('.admin-section').forEach(sec => {
+    sec.style.display = 'none';
+  });
+  document.getElementById(sectionId).style.display = 'block';
+}
