@@ -20,6 +20,15 @@ namespace backend.Controllers
             _adminRepository = adminRepository;
         }
 
+        // GET: api/Admin
+        [HttpGet]
+        [HttpGet("Index")]
+        public ActionResult<IEnumerable<Admin>> Index()
+        {
+            var admins = _adminRepository.GetAllAdmins();
+            return Ok(admins);
+        }
+
         // POST: api/admin/register
         [HttpPost("register")]
         public IActionResult Register([FromBody] AdminRegisterDto registerDto)

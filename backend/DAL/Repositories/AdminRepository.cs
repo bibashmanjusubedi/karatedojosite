@@ -13,6 +13,27 @@ namespace backend.DAL.Repositories
             _connectionString = connectionString;
         }
 
+        public IEnumerable<Admin> GetAllAdmins()
+        {
+            var Admins = new List<Admin>();
+            using var conn = new SqliteConnection(_connectionString);
+            conn.Open();
+            var sql = "SELECT * FROM Admin";
+            using var cmd = new SqliteCommand(sql, conn);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var Admin = new Admin
+                {
+                    Id = Convert.ToInt32(reader["id"]),
+                    Username = reader["username"].ToString(),
+                    PasswordHash = reader["password_hash"].ToString()
+                };
+                Admins.Add(Admin);
+            }
+            return Admins;
+        }
+
         // Get Admin by username
         public Admin? GetAdminByUserName(string userName)
         {
