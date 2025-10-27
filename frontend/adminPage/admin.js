@@ -241,14 +241,21 @@ function renderDojoInfo(){
 function renderSubscribers() {
   let tbody = document.querySelector('#subscribersTable tbody');
   tbody.innerHTML = "";
-  subscribers.forEach(sub =>
+  subscribers.forEach(sub =>{
+
+    // Parse as JS Date (interprets as UTC)
+    let utcDate = new Date(sub.subscribedAt+"Z");
+
+    // Display browser's local time
+    let localString = utcDate.toLocaleString();
+
     tbody.innerHTML += `<tr>
       <td>${sub.id}</td>
       <td>${sub.email}</td>
-      <td>${sub.subscribedAt}</td>
+      <td>${localString}</td>
       <td class="actions"><button class="delete" onclick="deleteSubscriber(${sub.id})">Delete</button></td>
     </tr>`
-  );
+  });
 }
 function deleteSubscriber(id) {
   // subscribers = subscribers.filter(s => s.id !== id); renderSubscribers();
