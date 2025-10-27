@@ -7,15 +7,7 @@ function showSection(key) {
   section = key;
 }
 
-// INIT example data (should fetch from backend API in production)
-// let dojoInfo = {
-//   name: "Shorinji Karate Dojo",
-//   hero_title: "Master The Art",
-//   hero_subtitle: "Discipline. Defense. Confidence.",
-//   hero_image_url: "",
-//   established_date: "2010-06-18",
-//   description: "A dojo for aspiring martial artists."
-// };
+
 let dojoInfo = {};
 
 function loadDojoInfo() {
@@ -75,9 +67,7 @@ function loadPrograms(){
     });
 }
 
-// let instructors = [
-//   {id: 1, name: "Sensei Bob", role: "Head Instructor", phone: "12345678", email: "bob@dojo.com", photo_url: "", photo: null}
-// ];
+
 let instructors = [];
 
 function loadInstructors(){
@@ -92,9 +82,7 @@ function loadInstructors(){
     });
 }
 
-// let highlights = [
-//   {id: 1, title: "Self Defense", content: "Essential self-defense techniques"}
-// ];
+
 let highlights = [];
 
 function loadHighlights(){
@@ -170,39 +158,6 @@ document.getElementById('dojoForm').onsubmit = function(e){
     console.error("Error : ",error);
   });
 
-
-
-
-
-  // fetch("https://localhost:7286/api/Dojo/Create", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json"
-  //   },
-  //   body: JSON.stringify(payload)
-  // })
-  // .then(response => {
-  //   if (!response.ok) throw new Error("Failed to save dojo info");
-  //   return response.json();
-  // })
-  // .then(data => {
-  //   dojoInfo = data;
-  //   renderDojoInfo();
-  //   alert("Dojo information saved!");
-  // })
-  // .catch(error => {
-  //   alert("Error saving dojo info");
-  //   console.error("Error:", error);
-  // });
-  // dojoInfo = {
-  //   name: document.getElementById('dojoName').value,
-  //   hero_title: document.getElementById('dojoHeroTitle').value,
-  //   hero_subtitle: document.getElementById('dojoHeroSubtitle').value,
-  //   hero_image_url: document.getElementById('dojoHeroImageUrl').value,
-  //   established_date: document.getElementById('dojoEstablishedDate').value,
-  //   description: document.getElementById('dojoDescription').value
-  // };
-  // renderDojoInfo();
 };
 
 function renderDojoInfo(){
@@ -272,6 +227,9 @@ function deleteSubscriber(id) {
     //Remove from local list and update table
     subscribers = subscribers.filter(s => s.id != id);
     renderSubscribers();
+    console.log("Deleting subscriber, then keeping on subscribers tab");
+    showSection('subscribers');
+    console.log("Deleting subscriber, then keeping on subscribers tab");
   })
   .catch(error =>{
     alert(error.message);
@@ -355,41 +313,7 @@ function renderPrograms() {
 // renderPrograms();
 loadPrograms();
 
-// Instructors CRUD (similar pattern)
-// let editingInstructor = null;
-// document.getElementById('instructorForm').onsubmit = function(e){
-//   e.preventDefault();
-//   let name = document.getElementById('instructorName').value.trim();
-//   let role = document.getElementById('instructorRole').value.trim();
-//   let phone = document.getElementById('instructorPhone').value.trim();
-//   let email = document.getElementById('instructorEmail').value.trim();
-//   let photo_url = document.getElementById('instructorPhotoUrl').value.trim();
-//   let photo = document.getElementById('instructorPhotoBlob').files[0] || null;
-//   if(editingInstructor){
-//     let ins = instructors.find(i => i.id === editingInstructor);
-//     Object.assign(ins, { name, role, phone, email, photo_url, photo });
-//     editingInstructor = null;
-//   } else {
-//     instructors.push({ id:Date.now(), name, role, phone, email, photo_url, photo });
-//   }
-//   this.reset();
-//   document.getElementById('instructorCancelBtn').style.display = "none";
-//   renderInstructors();
-// };
-// function editInstructor(id) {
-//   let i = instructors.find(x => x.id === id);
-//   document.getElementById('instructorId').value = i.id;
-//   document.getElementById('instructorName').value = i.name;
-//   document.getElementById('instructorRole').value = i.role;
-//   document.getElementById('instructorPhone').value = i.phone;
-//   document.getElementById('instructorEmail').value = i.email;
-//   document.getElementById('instructorPhotoUrl').value = i.photo_url;
-//   editingInstructor = id;
-//   document.getElementById('instructorCancelBtn').style.display = "inline-block";
-// }
-// document.getElementById('instructorCancelBtn').onclick = function(){
-//   document.getElementById('instructorForm').reset(); editingInstructor = null; this.style.display = "none";
-// };
+
 
 // Instructors CRUD (API-based like programs)
 let editingInstructor = null;
@@ -460,21 +384,7 @@ loadInstructors();
 
 // Highlights CRUD
 let editingHighlight = null;
-// document.getElementById('highlightForm').onsubmit = function(e){
-//   e.preventDefault();
-//   let title = document.getElementById('highlightTitle').value.trim();
-//   let content = document.getElementById('highlightContent').value.trim();
-//   if(editingHighlight){
-//     let h = highlights.find(hh => hh.id === editingHighlight);
-//     Object.assign(h, { title, content });
-//     editingHighlight = null;
-//   } else {
-//     highlights.push({ id:Date.now(), title, content });
-//   }
-//   this.reset();
-//   document.getElementById('highlightCancelBtn').style.display = "none";
-//   renderHighlights();
-// };
+
 
 document.getElementById('highlightForm').onsubmit = function(e){
   e.preventDefault();
@@ -581,7 +491,7 @@ function renderHighlights() {
 // renderHighlights();
 loadHighlights();
 
-showSection('dojo');
+// showSection('dojo');
 
 document.getElementById('deleteDojoBtn').onclick = function() {
   if (!dojoInfo.id) {
@@ -652,12 +562,7 @@ document.getElementById('programForm').onsubmit = function (e) {
   if (imageFile) formData.append("image", imageFile); // field name should match your API ('image')
   formData.append("pricing", pricing);
 
-  // const payload = {
-  //   name,
-  //   description,
-  //   imageUrl,   // Make sure your backend expects this field name
-  //   // Other fields if needed
-  // };
+  
 
   let apiUrl, method;
 
@@ -853,6 +758,7 @@ document.getElementById('instructorModal').onclick = function(e) {
 };
 
 function showSection(sectionId) {
+  console.log("showSection called with:", sectionId);
   document.querySelectorAll('.admin-section').forEach(sec => {
     sec.style.display = 'none';
   });
@@ -944,87 +850,7 @@ window.editAdmin = function(id) {
 loadAdmins();
 
 
-// document.getElementById('adminForm').onsubmit = function (e) {
-//   e.preventDefault();
 
-//   const username = document.getElementById('adminUsername').value.trim();
-//   const password = document.getElementById('adminPassword').value.trim();
-
-//   // If there is already at least one admin, update.
-//   if (admins.length > 0) {
-//     // For update, you’ll want to get "currentUsername" and "currentPassword"
-//     // For demo, assume updating the first (or only) admin
-//     const current = admins[0];
-
-//     // >>> GET TOKEN BEFORE FETCH <<<
-//     const token = localStorage.getItem("jwtToken"); // Or sessionStorage, as appropriate
-
-//     const body = {
-//       currentUsername: current.username,
-//       currentPassword: password,      // ask for current password in form; or you could require user to enter it
-//       newUsername: username,          // new username from form
-//       newPassword: password           // new password from form (can adjust as needed)
-//     };
-
-//     fetch("https://localhost:7286/api/admin/update", {
-//       method: "PUT",
-//       headers: {
-//         "Content-Type": "application/json",
-//         "Authorization": "Bearer "+ token // token is what you receive at login
-//       },
-//       body: JSON.stringify(body)
-//     })
-//     .then(async response => {
-//       if (!response.ok) throw new Error("Failed to update admin");
-//       const contentType = response.headers.get("content-type");
-//       if (contentType && contentType.indexOf("application/json") !== -1) {
-//         return await response.json();
-//       }
-//       return null;
-//     })
-//     .then(data => {
-//       loadAdmins();
-//       document.getElementById('adminForm').reset();
-//       document.getElementById('adminCancelBtn').style.display = "none";
-//       alert("Admin updated!");
-//     })
-//     .catch(error => {
-//       alert("Error updating admin");
-//       console.error("Error:", error);
-//     });
-
-//   } else {
-//     // Register new admin
-//     const payload = {
-//       username: username,
-//       password: password
-//     };
-
-//     fetch("https://localhost:7286/api/admin/register", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(payload)
-//     })
-//     .then(async response => {
-//       if (!response.ok) throw new Error("Failed to register admin");
-//       const contentType = response.headers.get("content-type");
-//       if (contentType && contentType.indexOf("application/json") !== -1) {
-//         return await response.json();
-//       }
-//       return null;
-//     })
-//     .then(data => {
-//       loadAdmins();
-//       document.getElementById('adminForm').reset();
-//       document.getElementById('adminCancelBtn').style.display = "none";
-//       alert("Admin registered!");
-//     })
-//     .catch(error => {
-//       alert("Error registering admin");
-//       console.error("Error:", error);
-//     });
-//   }
-// };
 
 
 document.getElementById('adminForm').onsubmit = async function (e) {
