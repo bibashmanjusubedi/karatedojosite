@@ -151,11 +151,20 @@ document.getElementById('dojoForm').onsubmit = function(e){
       });
     }
   })
-  .then(response => {
+  .then(async response => {
     if(!response.ok) throw new Error("Failed to save dojo info");
+    // Handle empty responses  or no JSON content
+    const text = await response.text();
+    let data = {};
+    try{
+      if (text) data = JSON.parse(text);
+    } catch(e){
+      // Silently handle parse errors - backend may return empty body
+      console("Parsing error: ", e);
+    }
     // If the response has content, parse JSON; else, return empty object
-    return response.headers.get("content-length") > 0 
-      ? response.json() : {};
+    // return response.headers.get("content-length") > 0 
+    //   ? response.json() : {};
     // return response.json();
   })
   .then(data => {
