@@ -1,4 +1,4 @@
-let section = 'dojo';
+let section = null ; 
 
 window.addEventListener("DOMContentLoaded",(e) => {
   const params = new URL(window.location).searchParams;
