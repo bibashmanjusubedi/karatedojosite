@@ -162,6 +162,8 @@ document.getElementById('dojoForm').onsubmit = function(e){
       // Silently handle parse errors - backend may return empty body
       console("Parsing error: ", e);
     }
+
+    return data;
     // If the response has content, parse JSON; else, return empty object
     // return response.headers.get("content-length") > 0 
     //   ? response.json() : {};
