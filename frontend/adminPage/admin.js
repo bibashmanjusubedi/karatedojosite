@@ -1,5 +1,11 @@
 let section = 'dojo';
 
+window.addEventListener("DOMContentLoaded",(e) => {
+  const params = new URL(window.location).searchParams;
+  const section = params.get("section");
+  showSection(section)
+})
+
 // View switching
 function showSection(key) {
   document.querySelectorAll('.admin-section').forEach(sec => sec.style.display = "none");
