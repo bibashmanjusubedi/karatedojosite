@@ -3,7 +3,11 @@ let section = 'dojo';
 window.addEventListener("DOMContentLoaded",(e) => {
   const params = new URL(window.location).searchParams;
   const section = params.get("section");
-  showSection(section)
+  if (section){
+    showSection(section);
+  } else {
+    showSection('dojo');
+  }
 })
 
 // View switching
