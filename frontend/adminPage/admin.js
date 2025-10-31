@@ -248,6 +248,7 @@ function deleteSubscriber(id) {
     //Remove from local list and update table
     subscribers = subscribers.filter(s => s.id != id);
     renderSubscribers();
+    alert("Subscriber deleted.");
     console.log("Deleting subscriber, then keeping on subscribers tab");
     showSection('subscribers');
     console.log("Deleting subscriber, then keeping on subscribers tab");
@@ -305,6 +306,7 @@ function deleteProgram(id) {
     // Remove from local list and update table
     programs = programs.filter(p => p.id !== id);
     renderPrograms();
+    alert("Program deleted.");
   })
   .catch(error => {
     alert(error.message);
@@ -372,6 +374,7 @@ function deleteInstructor(id) {
     // Update the local instructurs array or state after successful deletion
     instructors = instructors.filter(i => i.id != id);
     renderInstructors();
+    alert("Instructor deleted.");
   })
   .catch(error => {
     console.error('Error:',error);
@@ -484,6 +487,7 @@ function deleteHighlight(id) {
     // Remove the highlight locally if deletion was successful
     highlights = highlights.filter(h => h.id !== id);
     renderHighlights();
+    alert("Highlights deleted.");
   })
   .catch(error => {
     console.error('Error:', error);
@@ -832,8 +836,8 @@ window.deleteAdmin = function(id) {
     // Remove from local array and re-render
     admins = admins.filter(a => a.id !== id);
     renderAdmins();
-    showSection('admin'); 
     alert('Admin deleted!');
+    showSection('admin'); 
   })
   .catch(error => {
     alert("Error: " + error.message);
