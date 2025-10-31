@@ -618,7 +618,9 @@ document.getElementById('programForm').onsubmit = function (e) {
         // Try to parse JSON only if there is content
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.indexOf("application/json") !== -1) {
-        return await response.json();
+        const text = await response.text();
+        return text ? JSON.parse(text) : null;
+        // return await response.json();
       }
       return null; // No JSON to parse (e.g., update returns 204 No Content)
     })
