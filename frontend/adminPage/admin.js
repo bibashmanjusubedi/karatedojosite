@@ -744,8 +744,14 @@ document.getElementById('instructorForm').onsubmit = function(e){
       const contentType = response.headers.get("content-type");
       const text  =await response.text();
       if ((contentType && contentType.indexOf("application/json") !== -1)&& text) {
+        try{
+          return JSON.parse(text);
+        } catch(e){
+          console.error("JSON parse error:",e);
+          return null; 
+        }
         // return await response.json();
-        return JSON.parse(text);
+        // return JSON.parse(text);
       }
       return null;
     })
