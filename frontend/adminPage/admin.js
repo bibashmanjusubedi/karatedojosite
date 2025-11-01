@@ -1,4 +1,4 @@
-let section = null ; 
+let section = null ;
 
 window.addEventListener("DOMContentLoaded",(e) => {
   const params = new URL(window.location).searchParams;
@@ -13,8 +13,15 @@ window.addEventListener("DOMContentLoaded",(e) => {
 // View switching
 function showSection(key) {
   document.querySelectorAll('.admin-section').forEach(sec => sec.style.display = "none");
-  document.getElementById(key).style.display = "block";
-  section = key;
+  var el = document.getElementById(key);
+  if (el) {
+    el.style.display = "block";
+    section = key;
+  } else {
+    console.warn(`No element with id '${key}' found in showSection`);
+  }
+  // document.getElementById(key).style.display = "block";
+  // section = key;
 }
 
 
@@ -845,10 +852,16 @@ window.deleteAdmin = function(id) {
     admins = admins.filter(a => a.id !== id);
     renderAdmins();
     alert('Admin deleted!');
-    showSection('admin'); 
+    // showSection('admin'); why after commenting this code the style error disappears 
+    if(admins.length > 0) {
+      setAdminFormMode("edit", admins[0]);
+    } else {
+      setAdminFormMode("create");
+    }
   })
   .catch(error => {
-    alert("Error: " + error.message);
+    console.error("Delete admin error:", error, error && error.stack);
+    alert("Error: " + (error && error.message));
   });
 };
 
@@ -877,6 +890,11 @@ document.getElementById('adminViewModal').onclick = function(e) {
 window.editAdmin = function(id) {
   // Find the admin in the admins array
   const admin = admins.find(a => a.id === id);
+  if(!admin){
+    console.warn(`Admin not found with id ${id}`);
+    setAdminFormMode("create");
+    return;
+  }
   setAdminFormMode("edit", admin);
 };
 
@@ -946,23 +964,71 @@ document.getElementById('adminForm').onsubmit = async function (e) {
 
 
 function setAdminFormMode(mode, admin = null) {
+  console.log({
+    adminCreatePassword: document.getElementById('adminCreatePassword'),
+    adminCurrentPassword: document.getElementById('adminCurrentPassword'),
+    adminNewPassword: document.getElementById('adminNewPassword'),
+    adminCancelBtn: document.getElementById('adminCancelBtn'),
+    adminUsername: document.getElementById('adminUsername'),
+  });
+
+  console.log("setAdminFormMode called with mode:", mode, "admin:", admin);
+  function safeSetDisplay(id,display){
+   const el = document.getElementById(id);
+   if (el) el.style.display = display; 
+  }
   if (mode === "edit") {
-    document.getElementById('adminCreatePassword').style.display = "none";
-    document.getElementById('adminCurrentPassword').style.display = "block";
-    document.getElementById('adminNewPassword').style.display = "block";
-    document.getElementById('adminCancelBtn').style.display = "inline";
-    document.getElementById('adminUsername').value = admin ? admin.username : "";
-    document.getElementById('adminCurrentPassword').value = "";
-    document.getElementById('adminNewPassword').value = "";
+    if(!admin){
+      console.warn("No admin provided for edit mode");
+      setAdminFormMode("create");
+      return;
+    }
+    safeSetDisplay('adminCreatePassword','none');
+    safeSetDisplay('adminCurrentPassword','block');
+    safeSetDisplay('adminNewPassword','block');
+    safeSetDisplay('adminCancelBtn','inline');
+
+    const usernameEl = document.getElementById('adminUsername');
+    if (usernameEl) usernameEl.value = admin.username || "";
+    const currentPassEl = document.getElementById('adminCurrentPassword');
+    if (currentPassEl) currentPassEl.value = "";
+    const newPassEl = document.getElementById('adminNewPassword');
+    if (newPassEl) newPassEl.value = "";
+  
+  } else if (mode === "create") {
+    safeSetDisplay('adminCreatePassword', 'block');
+    safeSetDisplay('adminCurrentPassword', 'none');
+    safeSetDisplay('adminNewPassword', 'none');
+    safeSetDisplay('adminCancelBtn', 'none');
+
+    const usernameEl = document.getElementById('adminUsername');
+    if (usernameEl) usernameEl.value = "";
+    const createPassEl = document.getElementById('adminCreatePassword');
+    if (createPassEl) createPassEl.value = "";
+
+
   }
-  if (mode === "create") {
-    document.getElementById('adminCreatePassword').style.display = "block";
-    document.getElementById('adminCurrentPassword').style.display = "none";
-    document.getElementById('adminNewPassword').style.display = "none";
-    document.getElementById('adminCancelBtn').style.display = "none";
-    document.getElementById('adminUsername').value = "";
-    document.getElementById('adminCreatePassword').value = "";
-  }
+
+
+
+
+
+  //   document.getElementById('adminCreatePassword').style.display = "none";
+  //   document.getElementById('adminCurrentPassword').style.display = "block";
+  //   document.getElementById('adminNewPassword').style.display = "block";
+  //   document.getElementById('adminCancelBtn').style.display = "inline";
+  //   document.getElementById('adminUsername').value = admin ? admin.username : "";
+  //   document.getElementById('adminCurrentPassword').value = "";
+  //   document.getElementById('adminNewPassword').value = "";
+  // }
+  // if (mode === "create") {
+  //   document.getElementById('adminCreatePassword').style.display = "block";
+  //   document.getElementById('adminCurrentPassword').style.display = "none";
+  //   document.getElementById('adminNewPassword').style.display = "none";
+  //   document.getElementById('adminCancelBtn').style.display = "none";
+  //   document.getElementById('adminUsername').value = "";
+  //   document.getElementById('adminCreatePassword').value = "";
+  // }
 }
 
 function afterLoadAdmins() {
