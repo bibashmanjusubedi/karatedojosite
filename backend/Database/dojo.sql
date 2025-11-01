@@ -1,5 +1,6 @@
 -- Dojo General Info / Dojo Info /Dojo Table
 Create Table Dojo (
+	single_row_strict INTEGER NOT NULL DEFAULT 1 UNIQUE CHECK (single_row = 1),
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT,
 	hero_title TEXT,
@@ -30,6 +31,7 @@ ALTER Table Programs ADD COLUMN pricing TEXT;
 
 -- Team Members/ Instructors The Team Behind
 Create Table Instructor (
+	single_row_optional INTEGER NOT NULL DEFAULT 1 UNIQUE,
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT not null,
 	role TEXT not null,
@@ -48,6 +50,7 @@ Create Table HighLights(
 
 -- Exisiting table unchanged --
 Create Table Admin (
+	single_row_strict INTEGER NOT NULL DEFAULT 1 UNIQUE CHECK (single_row = 1),
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	username TEXT not null,
 	password_hash TEXT not null
