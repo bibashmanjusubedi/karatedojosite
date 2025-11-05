@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let index = 0;
 
+  
+
     function changeBackground() {
         showcase.style.backgroundImage = `url('${images[index]}')`;
 
@@ -32,6 +34,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         index = (index + 1) % images.length; // Loop through images
     }
+
+      // function to fetch and insert dojo data
+      function loadDojoData(){
+        fetch('https://localhost:7286/api/Dojo')
+            .then(response => response.json())
+            .then(data =>{
+                if(data.length > 0 ){
+                    const dojo = data[0];
+                    const h1Element = showcase.querySelector('h1');
+                    const pElement = showcase.querySelector('p b');
+                    if (h1Element) h1Element.textContent = dojo.name;
+                    if (pElement) pElement.textContent = dojo.description;
+                }
+            })
+            .catch(error => console.error('Error fetching dojo data:', error));
+    }
+
+    // call dojoData
+    loadDojoData();
 
     // Set initial background and start changing every 3 seconds
     changeBackground();
