@@ -54,6 +54,27 @@ document.addEventListener("DOMContentLoaded", () => {
     // call dojoData
     loadDojoData();
 
+    function serviceTemplate({name, description,pricing}){
+        return `
+            <li>
+                <h3>${name}</h3>
+                <p>${description}</p>
+                <p>Pricing in NRS: ${pricing}</p>
+            </li>    
+        `;
+    }
+
+    function loadProgramsData(){
+        fetch('https://localhost:7286/api/Programs')
+        .then(res => res.json())
+        .then(programs => {
+          document.getElementById('services').innerHTML =
+            programs.map(serviceTemplate).join('');
+        });
+    }
+
+    loadProgramsData();
+
     // Set initial background and start changing every 3 seconds
     changeBackground();
     setInterval(changeBackground, 3000);
