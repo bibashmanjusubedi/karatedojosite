@@ -75,6 +75,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadProgramsData();
 
+    function uint8ToBase64(bytes) {
+        let binary = '';
+        let len = bytes.length;
+        for (let i = 0; i < len; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+
+    function boxTemplate({image, name, description, pricing}) {
+        return `
+          <div class="box">
+            <img src="${image}" alt="${name}">
+            <h3>${name}</h3>
+          </div>
+        `;
+    }
+      
+    function loadProgramsBox(){
+        fetch('https://localhost:7286/api/Programs')
+            .then(res => res.json())
+            .then(programs => {
+                document.getElementById('boxesContainer').innerHTML =
+                programs.map(program => {
+                    const imageSrc = Array.isArray(program.image)
+                    ? `data:image/jpeg;base64,${uint8ToBase64(program.image)}`
+                    : `data:image/jpeg;base64,${program.image}`; // Or URL if available
+
+                    return boxTemplate({
+                    ...program,
+                    image: imageSrc
+                    });
+                }).join('');
+            });
+    }
+    
+    loadProgramsBox()
+    
+
     // Set initial background and start changing every 3 seconds
     changeBackground();
     setInterval(changeBackground, 3000);
