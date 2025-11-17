@@ -111,8 +111,32 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
     
-    loadProgramsBox()
+    loadProgramsBox();
+
+    function loadHighlightsData(){
+        fetch('https://localhost:7286/api/Highlights')
+            .then(response => response.json())
+            .then(highlights =>{
+                if (highlights.length > 0){
+                    const highlight = highlights[0];
+                    // Update the <h3> element inside #sidebar
+                    const h3Element = document.querySelector('#sidebar h3');
+                    if (h3Element) h3Element.textContent = highlight.title;
+
+                    // Update the <p> element inside #sidebar
+                    const pElement = document.querySelector('#sidebar p');
+                    if (pElement) pElement.textContent = highlight.content;
+
+                }
+            })
+            .catch(error => console.error('Error fetching highlights data:',error));
+    }
+
+    // Call loadHighlightsData at DOMContentLoaded
+    loadHighlightsData();
     
+
+    // Call load
 
     // Set initial background and start changing every 3 seconds
     changeBackground();
