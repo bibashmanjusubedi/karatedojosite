@@ -136,7 +136,52 @@ document.addEventListener("DOMContentLoaded", () => {
     loadHighlightsData();
     
 
-    // Call load
+    // Function to load instructor data
+    function loadInstructorData() {
+        fetch('https://localhost:7286/api/Instructor')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    const instructor = data[0];
+                    // Select the container where instructor details are shown
+                    const container = document.querySelector('#specific .box');
+
+                    if(container){
+                        // Update name and role
+                        container.querySelector('h2').textContent = instructor.name;
+                        const h3s = container.querySelectorAll('h3');
+                        if (h3s.length > 0) h3s[0].textContent = instructor.role;
+                        if (h3s.length > 1) h3s[1].textContent = instructor.phone;
+
+                        // Convert photo from Uint8Array or base64 string to image src
+                        let imageSrc = '';
+                        if (Array.isArray(instructor.photo)) {
+                            // If photo is Uint8Array
+                            imageSrc = `data:image/jpeg;base64,${uint8ToBase64(instructor.photo)}`;
+                        } else if (typeof instructor.photo === 'string') {
+                            // If photo is base64 string directly
+                            imageSrc = `data:image/jpeg;base64,${instructor.photo}`;
+                        } else {
+                            imageSrc = './img/ChandanDai.jpg'; // fallback
+                        }
+
+                        // Replace the img src
+                        const imgElement = container.querySelector('img');
+                        if(imgElement) {
+                            imgElement.src = imageSrc;
+                            imgElement.style.width = 'auto';  // you can set appropriate width or height here
+                            imgElement.style.height = '300px';
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching instructor data:', error);
+            });
+    }
+
+    // Call instructor data loading function
+    loadInstructorData();
 
     // Set initial background and start changing every 3 seconds
     changeBackground();
