@@ -1,3 +1,8 @@
+if (!localStorage.getItem('jwtToken')) {
+  window.location.href = '../adminPage/admin-login.html'; // Redirect if not logged in
+}
+
+
 let section = null ;
 
 window.addEventListener("DOMContentLoaded",(e) => {
@@ -1050,3 +1055,10 @@ async function loadAdmins() {
 document.getElementById('adminCancelBtn').onclick = function() {
   afterLoadAdmins();
 };
+
+
+document.getElementById('logoutBtn').addEventListener('click', function () {
+  // Remove the authentication token (assume it's 'jwtToken' based on your file)
+  localStorage.removeItem('jwtToken'); 
+  window.location.href = '../adminPage/admin-login.html'; // Redirect to your login page (adjust if different)
+});
