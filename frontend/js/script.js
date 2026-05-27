@@ -42,10 +42,21 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data =>{
                 if(data.length > 0 ){
                     const dojo = data[0];
-                    const h1Element = showcase.querySelector('h1');
-                    const pElement = showcase.querySelector('p b');
-                    if (h1Element) h1Element.textContent = dojo.name;
-                    if (pElement) pElement.textContent = dojo.description;
+                    debugger;
+
+                    if (showcase){
+                        const h1Element = showcase.querySelector('h1');
+                        const pElement = showcase.querySelector('p b');
+                        if (h1Element) h1Element.textContent = dojo.name;
+                        if (pElement) pElement.textContent = dojo.description;
+                    }  
+
+                    // New established date data for About page
+                    const establishedDateElement = document.getElementById('establishedDate');
+
+                    if (establishedDateElement){
+                        establishedDateElement.textContent = dojo.establishedDate
+                    }
                 }
             })
             .catch(error => console.error('Error fetching dojo data:', error));
