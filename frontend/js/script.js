@@ -26,8 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             showcase.childNodes[1].childNodes[1].style.marginTop = "100px";
 
-            showcase.style.width= "unset";
-            showcase.style.height="unset";
+            showcase.style.width= "";
+            showcase.style.height="";
             showcase.style.backgroundSize = "cover"; // Reset clip-path for other images
             showcase.style.backgroundPosition = "center"; // Optionally center other images
         }
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data =>{
                 if(data.length > 0 ){
                     const dojo = data[0];
-                    debugger;
+                    // debugger;
 
                     if (showcase){
                         const h1Element = showcase.querySelector('h1');
